@@ -16,6 +16,7 @@ class Client():
 		self.clientsocket.connect(("localhost", 5555))
 		self.send("add_player"+"§"+str(info))
 		_thread.start_new_thread(self.listen, ())
+		_thread.start_new_thread(self.commande_cmd, ())
 
 
 	def listen(self):
@@ -34,5 +35,25 @@ class Client():
 
 
 
+	def commande_cmd(self):
+		while True:
+			msg = input(">")
+			self.send(msg)
+
+
+
+
+
+#||||||||||||||||||||||||||||||||PARTIE GRAPHIQUE||||||||||||||||||||||||||||||||
+
+class Game():
+
+	def __init__(self):
+		self.fenetre = tk.Tk()
+
+
 a = Client()
 a.connect({"name": "sacha", "autre": 10})
+
+
+game = Game()
