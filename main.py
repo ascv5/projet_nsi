@@ -1,5 +1,8 @@
 import socket
 import _thread
+import tkinter as tk
+
+
 
 
 
@@ -27,7 +30,7 @@ class Client():
 			for a in r:
 				a = a.split("§")
 				if a [0] == "ping":
-					print("pong")
+					self.printe("pong")
 
 
 	def send(self, msg):
@@ -41,6 +44,19 @@ class Client():
 			self.send(msg)
 
 
+	def printe(self, a):
+		print(a)
+		"""
+		try:
+			game.log.config(text=str(a))
+		except:
+			pass
+		"""
+		#game.log.config(text=str(a))
+		b = game.log["text"]
+		b = b + "\n" + a
+		game.log.config(text=b)
+
 
 
 
@@ -50,10 +66,30 @@ class Game():
 
 	def __init__(self):
 		self.fenetre = tk.Tk()
+		global game
+		game = self
+		self.console()
+		tk.mainloop()
 
 
-a = Client()
-a.connect({"name": "sacha", "autre": 10})
+
+	def console(self):
+		fenetre = tk.Toplevel(self.fenetre)
+		fenetre.title("CONSOLE")
+		self.log = tk.Label(fenetre, text="Bienvenu dans la console : \n")
+		self.log.pack()
+		entree = tk.Entry(fenetre)
+		entree.pack()
+		tk.Button(fenetre, text="send", command=lambda:[client.send(entree.get())]).pack()
 
 
-game = Game()
+	def update_console(self, a):
+		self.log.config(text=a)
+
+
+
+client = Client()
+client.connect({"name": "sacha", "autre": 10})
+Game()
+
+
