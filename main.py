@@ -1,7 +1,7 @@
 import socket
 import _thread
 import tkinter as tk
-
+from PIL import ImageTk, Image
 
 
 
@@ -66,9 +66,20 @@ class Game():
 
 	def __init__(self):
 		self.fenetre = tk.Tk()
+		self.largeur = 562
+		self.longueur = 1000
+		self.fenetre.geometry(str(self.longueur)+"x"+str(self.largeur))
 		global game
 		game = self
 		self.console()
+		#martin: inserstion graphique pc tout#
+		img = Image.open("nsi_computer.PNG")
+		img = img.resize((self.longueur,self.largeur))
+		img = ImageTk.PhotoImage(img)
+		canvas = tk.Canvas(self.fenetre,width=self.longueur, height=self.largeur)
+		canvas.create_image(0, 0, anchor=tk.NW, image=img)
+		canvas.pack()
+		
 		tk.mainloop()
 
 
