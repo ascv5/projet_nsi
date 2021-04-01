@@ -32,11 +32,15 @@ class Client():
 				a = a.split("§")
 				if a [0] == "ping":
 					self.printe("pong")
+				elif a[0] == "lancer":
+					self.printe("lancement")
+					game.lancer()
 				else:
 					print("commande inconnu" + str(a))
 
 
 	def send(self, msg):
+		print(msg)
 		self.clientsocket.send(str(msg+"|").encode())
 
 
@@ -44,7 +48,7 @@ class Client():
 	def commande_cmd(self):
 		while True:
 			msg = input(">")
-			self.send(msg)
+			self.send(str(msg))
 
 
 	def printe(self, a):
@@ -82,6 +86,11 @@ class Game():
 
 
 
+
+	def lancer(self):
+		pass
+
+
 	def console(self):
 		fenetre = tk.Toplevel(self.fenetre)
 		fenetre.title("CONSOLE")
@@ -89,7 +98,12 @@ class Game():
 		self.log.pack()
 		entree = tk.Entry(fenetre)
 		entree.pack()
-		tk.Button(fenetre, text="send", command=lambda:[client.send(entree.get())]).pack()
+		tk.Button(fenetre, text="send", command=lambda:[self.console_tri(entree.get())]).pack()
+
+
+	def console_tri(self, msg):
+		if msg.split(" ")[0] == "serv":
+			client.send(str(" ".join(msg.split(" ")[1:])))
 
 
 
