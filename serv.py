@@ -2,6 +2,7 @@ import socket
 import _thread
 import threading
 import time
+import ast
 
 
 class Client(threading.Thread):
@@ -34,6 +35,9 @@ class Client(threading.Thread):
 						self.send("ping")
 					elif a[0] == "add_player":
 						print("+NEW_PLAYER : " + str(a[1]))
+						jeu.add_player(self.ide, str(a[1]))
+					elif a[0] == "lancer":
+						jeu.lancer_game()
 					elif a[0] == "EXEC":
 						exec(str(a[1]))
 					else:
@@ -48,6 +52,21 @@ class Client(threading.Thread):
 
 
 
+class BackGame():
+
+	def __init__(self):
+		self.joueur = {}
+
+
+	def add_player(self, ide, info):
+		self.joueur[ide] = ast.literal_eval(str(info))
+		print(self.joueur)
+
+
+	def lancer_game(self):
+		print("LANCEMENT")
+		for a in client_thread:
+			a.send("lancer")
 
 
 
@@ -55,6 +74,7 @@ class Client(threading.Thread):
 
 
 
+jeu = BackGame()
 
 #||||||||||||||||||||||||||||||||CLIENT ACCEPTER||||||||||||||||||||||||||||||||
 client_thread = []

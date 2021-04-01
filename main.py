@@ -27,10 +27,13 @@ class Client():
 			r = self.clientsocket.recv(2048)
 			r = r.decode()
 			r = r.split("|")
+			del r[-1]
 			for a in r:
 				a = a.split("§")
 				if a [0] == "ping":
 					self.printe("pong")
+				else:
+					print("commande inconnu" + str(a))
 
 
 	def send(self, msg):
@@ -65,6 +68,12 @@ class Client():
 class Game():
 
 	def __init__(self):
+		"""
+		///
+		///
+		variable self : 
+		log : Label du texte de la console
+		"""
 		self.fenetre = tk.Tk()
 		global game
 		game = self
@@ -81,10 +90,6 @@ class Game():
 		entree = tk.Entry(fenetre)
 		entree.pack()
 		tk.Button(fenetre, text="send", command=lambda:[client.send(entree.get())]).pack()
-
-
-	def update_console(self, a):
-		self.log.config(text=a)
 
 
 
