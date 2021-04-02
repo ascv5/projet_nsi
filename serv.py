@@ -78,7 +78,6 @@ class BackGame():
 
 
 
-
 jeu = BackGame()
 
 #||||||||||||||||||||||||||||||||CLIENT ACCEPTER||||||||||||||||||||||||||||||||

@@ -81,6 +81,9 @@ class Game():
 		self.fenetre = tk.Tk()
 		global game
 		game = self
+		self.largeur = 562
+		self.longueur = 1000
+		self.fenetre.geometry(str(self.longueur)+"x"+str(self.largeur))
 		self.console()
 		tk.mainloop()
 
@@ -90,25 +93,34 @@ class Game():
 	def lancer(self):
 		pass
 
-
 	def console(self):
 		fenetre = tk.Toplevel(self.fenetre)
 		fenetre.title("CONSOLE")
-		self.log = tk.Label(fenetre, text="Bienvenu dans la console : \n")
-		self.log.pack()
-		entree = tk.Entry(fenetre)
-		entree.pack()
-		tk.Button(fenetre, text="send", command=lambda:[self.console_tri(entree.get())]).pack()
+		fenetre.geometry(str(self.longueur)+"x"+str(self.largeur))
+		frame_console = tk.LabelFrame(fenetre, text="hisotrique")
+		frame_console.pack()
+		frame_entree = tk.LabelFrame(fenetre, text="entree")
+		frame_entree.pack(side="bottom", fill=tk.X)
+		self.log = tk.Label(frame_console, text="Bienvenue dans la console : \n")
+		self.log.pack(fill=tk.Y)
+		entree = tk.Entry(frame_entree)
+		entree.pack(anchor="s", fill=tk.X)
+		tk.Button(frame_entree, text="send", command=lambda:[self.console_tri(entree.get())]).pack()
 
 
 	def console_tri(self, msg):
-		if msg.split(" ")[0] == "serv":
+		a = msg.split(" ")
+		if a[0] == "serv":
 			client.send(str(" ".join(msg.split(" ")[1:])))
+		elif a[0] == "connect":
+			client.connect(str(" ".join(msg.split(" ")[1:])))
 
 
 
 client = Client()
-client.connect({"name": "sacha", "autre": 10})
 Game()
+
+
+#{"name": "sacha", "autre": 10}
 
 
