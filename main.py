@@ -35,6 +35,8 @@ class Client():
 				elif a[0] == "lancer":
 					self.printe("lancement")
 					game.lancer()
+				elif a[0] == "CONNECTED":
+					self.printe("connected (thread : " + a[1] + " )")
 				else:
 					print("commande inconnu" + str(a))
 
@@ -60,9 +62,9 @@ class Client():
 			pass
 		"""
 		#game.log.config(text=str(a))
-		b = game.log["text"]
+		b = game.console_log["text"]
 		b = b + "\n" + a
-		game.log.config(text=b)
+		game.console_log.config(text=b)
 
 
 
@@ -94,21 +96,27 @@ class Game():
 		pass
 
 	def console(self):
+		#
 		fenetre = tk.Toplevel(self.fenetre)
 		fenetre.title("CONSOLE")
 		fenetre.geometry(str(self.longueur)+"x"+str(self.largeur))
-		frame_console = tk.LabelFrame(fenetre, text="hisotrique")
-		frame_console.pack()
+		#
 		frame_entree = tk.LabelFrame(fenetre, text="entree")
-		frame_entree.pack(side="bottom", fill=tk.X)
-		self.log = tk.Label(frame_console, text="Bienvenue dans la console : \n")
-		self.log.pack(fill=tk.Y)
-		entree = tk.Entry(frame_entree)
-		entree.pack(anchor="s", fill=tk.X)
-		tk.Button(frame_entree, text="send", command=lambda:[self.console_tri(entree.get())]).pack()
+		frame_entree.pack(side=tk.BOTTOM, fill=tk.X)
+		frame_console = tk.LabelFrame(fenetre, text="hisotrique")
+		frame_console.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+		#
+		frame_console.update()
+		self.console_log = tk.Label(frame_console, text="Bienvenue dans la console : \n", bg="red")
+		self.console_log.pack(side=tk.TOP, anchor=tk.NW)
+		self.console_entree = tk.Entry(frame_entree)
+		self.console_entree.pack(anchor="s", fill=tk.X)
+		#
+		fenetre.bind("<Return>", self.console_tri)
 
 
-	def console_tri(self, msg):
+	def console_tri(self, event):
+		msg = self.console_entree.get()
 		a = msg.split(" ")
 		if a[0] == "serv":
 			client.send(str(" ".join(msg.split(" ")[1:])))
