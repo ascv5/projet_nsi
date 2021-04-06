@@ -81,11 +81,30 @@ class Game():
 		log : Label du texte de la console
 		"""
 		self.fenetre = tk.Tk()
-		global game
-		game = self
 		self.largeur = 562
 		self.longueur = 1000
 		self.fenetre.geometry(str(self.longueur)+"x"+str(self.largeur))
+		global game
+		game = self
+		self.console()
+		#martin: inserstion graphique pc tout#
+		img = Image.open("nsi_computer.PNG")
+		img = img.resize((self.longueur,self.largeur))
+		img = ImageTk.PhotoImage(img)
+		self.canvas = tk.Canvas(self.fenetre,width=self.longueur, height=self.largeur)
+		self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
+		self.canvas.pack()
+		
+		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.longueur, height=56/100*self.largeur, bg="red")
+		self.frame_epreuve.pack()
+		self.window_epreuve = self.canvas.create_window(81,70,window=self.frame_epreuve, anchor=tk.NW)
+		"""
+		tk.Label(self.frame_epreuve, text = "grosse bite de cheval").pack()
+		self.frame_joueurs = tk.LabelFrame(self.canvas, text="JOUEURS")
+		self.frame_joueurs.pack()
+		self.frame_score = tk.LabelFrame(self.canvas, text="SCORE")
+		self.frame_score.pack()
+		"""
 		self.console()
 		tk.mainloop()
 
