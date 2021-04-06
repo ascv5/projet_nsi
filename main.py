@@ -1,6 +1,7 @@
 import socket
 import _thread
 import tkinter as tk
+from PIL import ImageTk, Image
 
 
 
@@ -86,7 +87,6 @@ class Game():
 		self.fenetre.geometry(str(self.longueur)+"x"+str(self.largeur))
 		global game
 		game = self
-		self.console()
 		#martin: inserstion graphique pc tout#
 		img = Image.open("nsi_computer.PNG")
 		img = img.resize((self.longueur,self.largeur))
