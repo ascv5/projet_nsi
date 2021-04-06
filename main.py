@@ -82,7 +82,12 @@ class Game():
 		
 		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.longueur, height=56/100*self.largeur, bg="red")
 		self.frame_epreuve.pack()
-		self.window_epreuve = self.canvas.create_window(81,70,window=self.frame_epreuve, anchor=tk.NW)
+		self.window_epreuve = self.canvas.create_window(76,70,window=self.frame_epreuve, anchor=tk.NW)
+
+		self.frame_joueurs = tk.LabelFrame(self.fenetre, text="JOUEURS", width=20/100*self.longueur, height=27/100*self.largeur, bg="blue")
+		self.frame_joueurs.pack()
+		self.window_joueurs = self.canvas.create_window(747,87,window=self.frame_joueurs, anchor=tk.NW)
+
 		"""
 		tk.Label(self.frame_epreuve, text = "grosse bite de cheval").pack()
 		self.frame_joueurs = tk.LabelFrame(self.canvas, text="JOUEURS")
