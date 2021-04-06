@@ -17,7 +17,7 @@ METHODE 2 (vous n'avez pas de chance) :
 
 Ensuite deux fenetre s'ouvriront
 Dans la fentre intitulé console : 
-tappez : connect {"name": "test", "autre": 10} 
+tappez : connect {"name": "sacha", "autre": 10} 
 (note vous pouvez bien evidement changer la valeur de "name" (en un str) et de "autre")
 vous pouvez maintenant tapez les commandes : 
 	serv ping (vous répondra : pong)
