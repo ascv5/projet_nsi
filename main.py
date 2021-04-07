@@ -82,22 +82,23 @@ class Game():
 		log : Label du texte de la console
 		"""
 		self.fenetre = tk.Tk()
-		self.largeur = 562
-		self.longueur = 1000
-		self.fenetre.geometry(str(self.longueur)+"x"+str(self.largeur))
+		self.hauteur = 562
+		self.largeur = 1000
+		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
 		global game
 		game = self
 		#martin: inserstion graphique pc tout#
 		img = Image.open("nsi_computer.PNG")
-		img = img.resize((self.longueur,self.largeur))
+		img = img.resize((self.largeur,self.hauteur))
 		img = ImageTk.PhotoImage(img)
-		self.canvas = tk.Canvas(self.fenetre,width=self.longueur, height=self.largeur)
-		self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
+		self.canvas = tk.Canvas(self.fenetre,width=self.largeur, height=self.hauteur)
+		self.image_bg = self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
 		self.canvas.pack()
-		
-		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.longueur, height=56/100*self.largeur, bg="red")
+		"""
+		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=58/100*self.largeur, height=56/100*self.hauteur, bg="white")
 		self.frame_epreuve.pack()
-		self.window_epreuve = self.canvas.create_window(81,70,window=self.frame_epreuve, anchor=tk.NW)
+		self.window_epreuve = self.canvas.create_window(13*self.hauteur/100, 7*self.largeur/100, window=self.frame_epreuve, anchor=tk.NW)
+		"""
 		"""
 		tk.Label(self.frame_epreuve, text = "grosse bite de cheval").pack()
 		self.frame_joueurs = tk.LabelFrame(self.canvas, text="JOUEURS")
@@ -110,6 +111,18 @@ class Game():
 
 
 
+	def change_resolution(self, hauteur, largeur):
+		self.hauteur = int(hauteur)
+		self.largeur = int(largeur)
+		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
+		self.canvas.config(height=self.largeur, width=self.hauteur)
+		img = Image.open("nsi_computer.PNG")
+		img = img.resize((self.largeur,self.hauteur))
+		img = ImageTk.PhotoImage(img)
+		self.canvas.itemconfig(self.image_bg, image=img)
+		print(self.hauteur)
+
+
 
 	def lancer(self):
 		pass
@@ -118,7 +131,7 @@ class Game():
 		#
 		fenetre = tk.Toplevel(self.fenetre)
 		fenetre.title("CONSOLE")
-		fenetre.geometry(str(self.longueur)+"x"+str(self.largeur))
+		fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
 		#
 		frame_entree = tk.LabelFrame(fenetre, text="entree")
 		frame_entree.pack(side=tk.BOTTOM, fill=tk.X)
@@ -141,6 +154,11 @@ class Game():
 			client.send(str(" ".join(msg.split(" ")[1:])))
 		elif a[0] == "connect":
 			client.connect(str(" ".join(msg.split(" ")[1:])))
+		else:
+			if a[0] == "change_resolution":
+				self.change_resolution(a[1], a[2])
+			else:
+				printe("Unknow command : " + str(a))
 
 
 
