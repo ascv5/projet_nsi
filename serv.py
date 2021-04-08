@@ -2,6 +2,7 @@ import socket
 import _thread
 import threading
 import time
+import ast
 
 
 class Client(threading.Thread):
@@ -21,25 +22,31 @@ class Client(threading.Thread):
 
 
 	def listen(self):
-		try:
-			while True:
-				r = self.clientsocket.recv(2048)
-				r = r.decode()
-				r = r.split("|")
-				del r[-1]
-				for a in r:
-					a = a.split("§")
-					if a[0] == "ping":
-						print("pong")
-						self.send("ping")
-					elif a[0] == "add_player":
-						print("+NEW_PLAYER : " + str(a[1]))
-					elif a[0] == "EXEC":
-						exec(str(a[1]))
-					else:
-						print("commande inconu : " + str(a))
-		except:
-			print("Connection error with id : " + str(self.ide) + " or in dvp bug")
+		#---> TRY
+		while True:
+			r = self.clientsocket.recv(2048)
+			r = r.decode()
+			r = r.split("|")
+			del r[-1]
+			for a in r:
+				a = a.split("§")
+				if a[0] == "ping":
+					print("pong")
+					self.send("ping")
+				elif a[0] == "add_player":
+					print("+NEW_PLAYER : " + str(a[1]))
+					jeu.add_player(self.ide, str(a[1]))
+					self.send("CONNECTED§"+str(self.ide))
+				elif a[0] == "lancer":
+					jeu.lancer_game()
+				elif a[0] == "get":
+					#chantier
+					pass
+				elif a[0] == "EXEC":
+					exec(str(a[1]))
+				else:
+					print("commande inconu : " + str(a))
+		#print("Connection error with id : " + str(self.ide) + " or in dvp bug")
 
 
 	def send(self, msg):
@@ -48,13 +55,29 @@ class Client(threading.Thread):
 
 
 
+class BackGame():
+
+	def __init__(self):
+		self.joueur = {}
+
+
+	def add_player(self, ide, info):
+		self.joueur[ide] = ast.literal_eval(str(info))
+		self.joueur[ide]["score"] = 0
+		print(self.joueur)
+
+
+	def lancer_game(self):
+		print("LANCEMENT")
+		for a in client_thread:
+			a.send("lancer")
 
 
 
 
 
 
-
+jeu = BackGame()
 
 #||||||||||||||||||||||||||||||||CLIENT ACCEPTER||||||||||||||||||||||||||||||||
 client_thread = []
