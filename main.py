@@ -3,6 +3,8 @@ import _thread
 import tkinter as tk
 from PIL import ImageTk, Image
 
+import tools
+
 
 
 
@@ -38,6 +40,9 @@ class Client():
 					game.lancer()
 				elif a[0] == "CONNECTED":
 					self.printe("connected (thread : " + a[1] + " )")
+				elif a[0] == "epreuve":
+					if a[1] == "ep1":
+						game.epreuve1(a[2])
 				else:
 					print("commande inconnu" + str(a))
 
@@ -95,19 +100,24 @@ class Game():
 		self.image_bg = self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
 		self.canvas.pack()
 		
-		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.longueur, height=56/100*self.largeur, bg="red")
+		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.largeur, height=56/100*self.hauteur, bg="red")
 		self.frame_epreuve.pack()
+		self.frame_epreuve.pack_propagate(0)
 		self.window_epreuve = self.canvas.create_window(76,70,window=self.frame_epreuve, anchor=tk.NW)
 
-		self.frame_joueurs = tk.LabelFrame(self.fenetre, text="JOUEURS", width=20/100*self.longueur, height=27/100*self.largeur, bg="blue")
+		self.frame_joueurs = tk.LabelFrame(self.fenetre, text="JOUEURS", width=20/100*self.largeur, height=27/100*self.hauteur, bg="blue")
 		self.frame_joueurs.pack()
 		self.window_joueurs = self.canvas.create_window(747,87,window=self.frame_joueurs, anchor=tk.NW)
 
-		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.longueur, height=40/100*self.largeur, bg="green")
+		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
 		self.frame_score.pack()
 		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
 
-		
+		self.fenetre.bind("<KeyPress>", self.actualize)
+		#
+		#
+		#
+		self.epreuve_en_cour = None
 		self.console()
 		tk.mainloop()
 
@@ -124,6 +134,19 @@ class Game():
 		self.canvas.itemconfigure(self.image_bg, image=img)
 		self.canvas.pack()
 
+
+
+	def epreuve1(self, ep1_phrase):
+		self.epreuve_en_cour = 1
+		self.ep1_phrase = ep1_phrase
+		label = tk.Label(self.frame_epreuve, text="RIEN")
+		label.pack()
+		entree = tk.Entry(self.frame_epreuve)
+		entree.pack()
+
+
+
+	#||||||||||||||||||||||||||||||||PPPPPPPPPPPPP||||||||||||||||||||||||||||||||
 
 
 	def lancer(self):
@@ -161,6 +184,13 @@ class Game():
 				self.change_resolution(a[1], a[2])
 			else:
 				client.printe("Unknow command : " + str(a))
+
+
+
+	def actualize(self, KeyRelease):
+		if self.epreuve_en_cour == 1:
+			if tools.verif_text() == True:
+				print("c gg")
 
 
 

@@ -71,6 +71,7 @@ class BackGame():
 		print("LANCEMENT")
 		for a in client_thread:
 			a.send("lancer")
+			a.send("epreuve§ep1§phrasephrase")
 
 
 
