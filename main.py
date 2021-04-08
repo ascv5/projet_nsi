@@ -94,18 +94,20 @@ class Game():
 		self.canvas = tk.Canvas(self.fenetre,width=self.largeur, height=self.hauteur)
 		self.image_bg = self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
 		self.canvas.pack()
-		"""
-		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=58/100*self.largeur, height=56/100*self.hauteur, bg="white")
+		
+		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.longueur, height=56/100*self.largeur, bg="red")
 		self.frame_epreuve.pack()
-		self.window_epreuve = self.canvas.create_window(13*self.hauteur/100, 7*self.largeur/100, window=self.frame_epreuve, anchor=tk.NW)
-		"""
-		"""
-		tk.Label(self.frame_epreuve, text = "grosse bite de cheval").pack()
-		self.frame_joueurs = tk.LabelFrame(self.canvas, text="JOUEURS")
+		self.window_epreuve = self.canvas.create_window(76,70,window=self.frame_epreuve, anchor=tk.NW)
+
+		self.frame_joueurs = tk.LabelFrame(self.fenetre, text="JOUEURS", width=20/100*self.longueur, height=27/100*self.largeur, bg="blue")
 		self.frame_joueurs.pack()
-		self.frame_score = tk.LabelFrame(self.canvas, text="SCORE")
+		self.window_joueurs = self.canvas.create_window(747,87,window=self.frame_joueurs, anchor=tk.NW)
+
+		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.longueur, height=40/100*self.largeur, bg="green")
 		self.frame_score.pack()
-		"""
+		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
+
+		
 		self.console()
 		tk.mainloop()
 
@@ -119,8 +121,8 @@ class Game():
 		img = Image.open("nsi_computer.PNG")
 		img = img.resize((self.largeur,self.hauteur))
 		img = ImageTk.PhotoImage(img)
-		self.canvas.itemconfig(self.image_bg, image=img)
-		print(self.hauteur)
+		self.canvas.itemconfigure(self.image_bg, image=img)
+		self.canvas.pack()
 
 
 
@@ -158,7 +160,7 @@ class Game():
 			if a[0] == "change_resolution":
 				self.change_resolution(a[1], a[2])
 			else:
-				printe("Unknow command : " + str(a))
+				client.printe("Unknow command : " + str(a))
 
 
 
