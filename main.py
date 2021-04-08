@@ -9,6 +9,7 @@ import tools
 
 
 
+
 class Client():
 
 	def __init__(self):
@@ -43,8 +44,6 @@ class Client():
 				elif a[0] == "epreuve":
 					if a[1] == "ep1":
 						game.epreuve1(a[2])
-				else:
-					print("commande inconnu" + str(a))
 
 
 	def send(self, msg):
@@ -123,6 +122,7 @@ class Game():
 
 
 
+
 	def change_resolution(self, hauteur, largeur):
 		self.hauteur = int(hauteur)
 		self.largeur = int(largeur)
@@ -147,6 +147,7 @@ class Game():
 
 
 	#||||||||||||||||||||||||||||||||PPPPPPPPPPPPP||||||||||||||||||||||||||||||||
+
 
 
 	def lancer(self):
