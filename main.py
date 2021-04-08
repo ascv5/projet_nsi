@@ -88,14 +88,10 @@ class Game():
 		self.frame_joueurs.pack()
 		self.window_joueurs = self.canvas.create_window(747,87,window=self.frame_joueurs, anchor=tk.NW)
 
-		"""
-		tk.Label(self.frame_epreuve, text = "grosse bite de cheval").pack()
-		self.frame_joueurs = tk.LabelFrame(self.canvas, text="JOUEURS")
-		self.frame_joueurs.pack()
-		self.frame_score = tk.LabelFrame(self.canvas, text="SCORE")
+		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.longueur, height=40/100*self.largeur, bg="green")
 		self.frame_score.pack()
-		"""
-		
+		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
+
 		tk.mainloop()
 
 
