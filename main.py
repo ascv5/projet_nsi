@@ -98,7 +98,7 @@ class Game():
 		self.canvas = tk.Canvas(self.fenetre,width=self.largeur, height=self.hauteur)
 		self.image_bg = self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
 		self.canvas.pack()
-		
+
 		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.largeur, height=56/100*self.hauteur, bg="red")
 		self.frame_epreuve.pack()
 		self.frame_epreuve.pack_propagate(0)
@@ -111,7 +111,7 @@ class Game():
 		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
 		self.frame_score.pack()
 		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
-
+		
 		self.fenetre.bind("<KeyPress>", self.actualize)
 		#
 		#
@@ -127,12 +127,20 @@ class Game():
 		self.hauteur = int(hauteur)
 		self.largeur = int(largeur)
 		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
-		self.canvas.config(height=self.largeur, width=self.hauteur)
+		self.canvas.config(height=self.hauteur, width=self.largeur)
+		"""
 		img = Image.open("nsi_computer.PNG")
 		img = img.resize((self.largeur,self.hauteur))
 		img = ImageTk.PhotoImage(img)
-		self.canvas.itemconfigure(self.image_bg, image=img)
-		self.canvas.pack()
+		self.image_bg = self.canvas.itemconfigure(self.image_bg, image=img)
+		"""
+		self.canvas.delete(self.image_bg)
+		del self.image_bg
+		img = Image.open("nsi_computer.PNG")
+		img = img.resize((self.largeur,self.hauteur))
+		img = ImageTk.PhotoImage(img)
+		test = self.canvas.create_image(100, 100, anchor=tk.NW, image=img)
+		#self.canvas.pack()
 
 
 
@@ -141,8 +149,8 @@ class Game():
 		self.ep1_phrase = ep1_phrase
 		label = tk.Label(self.frame_epreuve, text="RIEN")
 		label.pack()
-		entree = tk.Entry(self.frame_epreuve)
-		entree.pack()
+		self.ep1_entry = tk.Entry(self.frame_epreuve)
+		self.ep1_entry.pack()
 
 
 
@@ -191,7 +199,7 @@ class Game():
 
 	def actualize(self, KeyRelease):
 		if self.epreuve_en_cour == 1:
-			if tools.verif_text() == True:
+			if tools.verif_text(self.ep1_phrase, self.ep1_entry) == True:
 				print("c gg")
 
 
