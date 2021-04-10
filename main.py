@@ -2,6 +2,7 @@ import socket
 import _thread
 import tkinter as tk
 from PIL import ImageTk, Image
+import time
 
 import tools
 
@@ -20,7 +21,7 @@ class Client():
 
 	def connect(self, info):
 		self.clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.clientsocket.connect(("localhost", 5555))
+		self.clientsocket.connect(("localhost", 6666))
 		self.send("add_player"+"§"+str(info))
 		_thread.start_new_thread(self.listen, ())
 		_thread.start_new_thread(self.commande_cmd, ())
@@ -44,6 +45,8 @@ class Client():
 				elif a[0] == "epreuve":
 					if a[1] == "ep1":
 						game.epreuve1(a[2])
+				else:
+					print("Unknow command : " + str(a))
 
 
 	def send(self, msg):
@@ -151,6 +154,8 @@ class Game():
 		label.pack()
 		self.ep1_entry = tk.Entry(self.frame_epreuve)
 		self.ep1_entry.pack()
+		self.ep_time_begin = time.time()
+
 
 
 
@@ -189,6 +194,8 @@ class Game():
 			client.send(str(" ".join(msg.split(" ")[1:])))
 		elif a[0] == "connect":
 			client.connect(str(" ".join(msg.split(" ")[1:])))
+		elif a[0] == "co":
+			client.connect("{'name':'sacha'}")
 		else:
 			if a[0] == "change_resolution":
 				self.change_resolution(a[1], a[2])
@@ -199,8 +206,10 @@ class Game():
 
 	def actualize(self, KeyRelease):
 		if self.epreuve_en_cour == 1:
-			if tools.verif_text(self.ep1_phrase, self.ep1_entry) == True:
-				print("c gg")
+			if tools.verif_text(self.ep1_phrase, self.ep1_entry.get()) == True:
+				#EPREUVE 1 REUSSI
+				temps = time.time() - self.ep_time_begin
+				client.send("epreuve_finish§" + str(temps))
 
 
 
@@ -212,3 +221,10 @@ Game()
 #{"name": "sacha", "autre": 10}
 
 
+"""
+A FAIRE:
+RESIZE
+PREMIERE EPREUVE
+
+
+"""
