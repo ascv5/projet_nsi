@@ -3,6 +3,7 @@ import _thread
 import tkinter as tk
 from PIL import ImageTk, Image
 import time
+import ast
 
 import tools
 
@@ -45,6 +46,8 @@ class Client():
 				elif a[0] == "epreuve":
 					if a[1] == "ep1":
 						game.epreuve1(a[2])
+				elif a[0] == "new_player":
+					game.add_player(a[1])
 				else:
 					print("Unknow command : " + str(a))
 
@@ -88,6 +91,8 @@ class Game():
 		variable self : 
 		log : Label du texte de la console
 		"""
+		self.other_player = []
+		#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 		self.fenetre = tk.Tk()
 		self.hauteur = 562
 		self.largeur = 1000
@@ -109,6 +114,9 @@ class Game():
 
 		self.frame_joueurs = tk.LabelFrame(self.fenetre, text="JOUEURS", width=20/100*self.largeur, height=27/100*self.hauteur, bg="blue")
 		self.frame_joueurs.pack()
+		self.frame_joueurs.pack_propagate(0)
+		self.frame_joueurs.grid_propagate(0)
+		self.frame_joueurs_liste = []
 		self.window_joueurs = self.canvas.create_window(747,87,window=self.frame_joueurs, anchor=tk.NW)
 
 		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
@@ -123,6 +131,25 @@ class Game():
 		self.console()
 		tk.mainloop()
 
+
+
+
+	def add_player(self, info):
+		info = ast.literal_eval(info)
+		self.other_player.append(info)
+		for a in range(0, len(self.other_player)):
+			self.add_player_frame(self.other_player[a], a)
+			print("heyo")
+
+
+	def add_player_frame(self, info, nb):
+		frame = tk.Frame(self.frame_joueurs)
+		frame.grid(row=nb//2, column=nb%2)
+		frame.grid_propagate(0)
+		label_name = tk.Label(frame, text=info["name"])
+		label_name.pack()
+		label_ide = tk.Label(frame, text=info["ide"])
+		label_ide.pack()
 
 
 
@@ -196,6 +223,8 @@ class Game():
 			client.connect(str(" ".join(msg.split(" ")[1:])))
 		elif a[0] == "co":
 			client.connect("{'name':'sacha'}")
+		elif a[0] == "con":
+			client.connect("{'name':'test'}")
 		else:
 			if a[0] == "change_resolution":
 				self.change_resolution(a[1], a[2])
@@ -224,6 +253,7 @@ Game()
 """
 A FAIRE:
 RESIZE
+PLACE LES FRAMES DE FACON DYNAMIQUES
 PREMIERE EPREUVE
 
 

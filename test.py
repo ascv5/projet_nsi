@@ -1,5 +1,4 @@
-import time
-
-print(time.time())
-time.sleep(1)
-print(time.time())
+n = input()
+n = int(n)
+print(n%2)
+print(n//2)

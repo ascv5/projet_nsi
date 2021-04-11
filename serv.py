@@ -63,6 +63,7 @@ class BackGame():
 
 	def add_player(self, ide, info):
 		self.joueur[ide] = ast.literal_eval(str(info))
+		self.joueur[ide]["ide"] = ide
 		self.joueur[ide]["score"] = 0
 		print(self.joueur)
 		#envoie aux autres joueurs :
