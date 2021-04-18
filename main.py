@@ -97,6 +97,7 @@ class Game():
 		self.hauteur = 562
 		self.largeur = 1000
 		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
+		self.fenetre.resizable(width=False, height=False)
 		global game
 		game = self
 		#martin: inserstion graphique pc tout#
@@ -112,12 +113,15 @@ class Game():
 		self.frame_epreuve.pack_propagate(0)
 		self.window_epreuve = self.canvas.create_window(76,70,window=self.frame_epreuve, anchor=tk.NW)
 
-		self.frame_joueurs = tk.LabelFrame(self.fenetre, text="JOUEURS", width=20/100*self.largeur, height=27/100*self.hauteur, bg="blue")
-		self.frame_joueurs.pack()
-		self.frame_joueurs.pack_propagate(0)
-		self.frame_joueurs.grid_propagate(0)
+		self.frame_joueurs_1 = tk.LabelFrame(self.fenetre, text="JOUEURS_1", width=19.9/100*self.largeur, height=10.8/100*self.hauteur, bg="blue")
+		self.frame_joueurs_1.pack(expand=True, fill="both")
+		self.frame_joueurs_1.grid_propagate(0)
+		self.frame_joueurs_1.pack_propagate(0)
+		self.frame_joueurs_1.rowconfigure(0, weight=1)
+		self.frame_joueurs_1.columnconfigure(0, weight=1)
+		self.frame_joueurs_1.columnconfigure(1, weight=1)
 		self.frame_joueurs_liste = []
-		self.window_joueurs = self.canvas.create_window(747,87,window=self.frame_joueurs, anchor=tk.NW)
+		self.window_joueurs_1 = self.canvas.create_window(747,87,window=self.frame_joueurs_1, anchor=tk.NW)
 
 		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
 		self.frame_score.pack()
@@ -137,19 +141,17 @@ class Game():
 	def add_player(self, info):
 		info = ast.literal_eval(info)
 		self.other_player.append(info)
-		for a in range(0, len(self.other_player)):
-			self.add_player_frame(self.other_player[a], a)
-			print("heyo")
+		self.add_player_frame(info, len(self.other_player)-1)
 
 
 	def add_player_frame(self, info, nb):
-		frame = tk.Frame(self.frame_joueurs)
-		frame.grid(row=nb//2, column=nb%2)
-		frame.grid_propagate(0)
-		label_name = tk.Label(frame, text=info["name"])
-		label_name.pack()
-		label_ide = tk.Label(frame, text=info["ide"])
-		label_ide.pack()
+		if nb < 2:
+			frame = tk.LabelFrame(self.frame_joueurs_1)
+			frame.grid(row=0, column=nb, sticky="nesw")
+			label_name = tk.Label(frame, text=info["name"])
+			label_name.pack()
+			label_ide = tk.Label(frame, text=info["ide"])
+			label_ide.pack()
 
 
 
