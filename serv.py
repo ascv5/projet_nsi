@@ -102,6 +102,7 @@ tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpsock.bind(("",6666))
 
 ide = 0
+print("SERV IS RUNNING")
 while True:
 	tcpsock.listen(10)
 	(clientsocket, (ip, port)) = tcpsock.accept()

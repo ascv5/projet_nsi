@@ -10,8 +10,6 @@ import tools
 
 
 
-
-
 class Client():
 
 	def __init__(self):
@@ -111,17 +109,17 @@ class Game():
 		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.largeur, height=56/100*self.hauteur, bg="red")
 		self.frame_epreuve.pack()
 		self.frame_epreuve.pack_propagate(0)
-		self.window_epreuve = self.canvas.create_window(76,70,window=self.frame_epreuve, anchor=tk.NW)
+		self.window_epreuve = self.canvas.create_window(7.53/100*self.largeur, 12.57/100*self.hauteur, window=self.frame_epreuve, anchor=tk.NW)
 
-		self.frame_joueurs_1 = tk.LabelFrame(self.fenetre, text="JOUEURS_1", width=19.9/100*self.largeur, height=10.8/100*self.hauteur, bg="blue")
-		self.frame_joueurs_1.pack(expand=True, fill="both")
-		self.frame_joueurs_1.grid_propagate(0)
-		self.frame_joueurs_1.pack_propagate(0)
-		self.frame_joueurs_1.rowconfigure(0, weight=1)
-		self.frame_joueurs_1.columnconfigure(0, weight=1)
-		self.frame_joueurs_1.columnconfigure(1, weight=1)
+		self.frame_joueurs = tk.LabelFrame(self.fenetre, text="JOUEURS", width=19.9/100*self.largeur, height=26.3/100*self.hauteur, bg="blue")
+		self.frame_joueurs.pack(expand=True, fill="both")
+		self.frame_joueurs.rowconfigure(0, weight=1)
+		self.frame_joueurs.rowconfigure(1, weight=1)
+		self.frame_joueurs.rowconfigure(2, weight=1)
+		self.frame_joueurs.columnconfigure(0, weight=1)
+		self.frame_joueurs.columnconfigure(1, weight=1)
 		self.frame_joueurs_liste = []
-		self.window_joueurs_1 = self.canvas.create_window(747,87,window=self.frame_joueurs_1, anchor=tk.NW)
+		self.window_joueurs = self.canvas.create_window(747,87,window=self.frame_joueurs, anchor=tk.NW)
 
 		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
 		self.frame_score.pack()
@@ -146,8 +144,22 @@ class Game():
 
 	def add_player_frame(self, info, nb):
 		if nb < 2:
-			frame = tk.LabelFrame(self.frame_joueurs_1)
-			frame.grid(row=0, column=nb, sticky="nesw")
+			frame = tk.LabelFrame(self.frame_joueurs)
+			frame.grid(row=0, column=nb%2, sticky="nesw")
+			label_name = tk.Label(frame, text=info["name"])
+			label_name.pack()
+			label_ide = tk.Label(frame, text=info["ide"])
+			label_ide.pack()
+		elif nb < 4:
+			frame = tk.LabelFrame(self.frame_joueurs)
+			frame.grid(row=1, column=nb%2, sticky="nesw")
+			label_name = tk.Label(frame, text=info["name"])
+			label_name.pack()
+			label_ide = tk.Label(frame, text=info["ide"])
+			label_ide.pack()
+		elif nb < 6:
+			frame = tk.LabelFrame(self.frame_joueurs)
+			frame.grid(row=2, column=nb%2, sticky="nesw")
 			label_name = tk.Label(frame, text=info["name"])
 			label_name.pack()
 			label_ide = tk.Label(frame, text=info["ide"])
@@ -158,7 +170,7 @@ class Game():
 	def change_resolution(self, hauteur, largeur):
 		self.hauteur = int(hauteur)
 		self.largeur = int(largeur)
-		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
+		#self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
 		self.canvas.config(height=self.hauteur, width=self.largeur)
 		"""
 		img = Image.open("nsi_computer.PNG")
@@ -166,12 +178,20 @@ class Game():
 		img = ImageTk.PhotoImage(img)
 		self.image_bg = self.canvas.itemconfigure(self.image_bg, image=img)
 		"""
+		"""
 		self.canvas.delete(self.image_bg)
 		del self.image_bg
 		img = Image.open("nsi_computer.PNG")
 		img = img.resize((self.largeur,self.hauteur))
 		img = ImageTk.PhotoImage(img)
 		test = self.canvas.create_image(100, 100, anchor=tk.NW, image=img)
+		"""
+		self.frame_epreuve.config(width=57/100*self.largeur)
+		self.frame_epreuve.config(height=56/100*self.hauteur)
+		self.frame_epreuve.place(x=7.53/100*self.largeur, y=12.57/100*self.hauteur)
+
+
+
 		#self.canvas.pack()
 
 
@@ -228,8 +248,10 @@ class Game():
 		elif a[0] == "con":
 			client.connect("{'name':'test'}")
 		else:
-			if a[0] == "change_resolution":
+			if a[0] == "resize":
 				self.change_resolution(a[1], a[2])
+			elif a[0] == "exit_console":
+				
 			else:
 				client.printe("Unknow command : " + str(a))
 
