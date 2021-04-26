@@ -103,7 +103,7 @@ class Game():
 		img = img.resize((self.largeur,self.hauteur))
 		img = ImageTk.PhotoImage(img)
 		self.canvas = tk.Canvas(self.fenetre,width=self.largeur, height=self.hauteur)
-		self.image_bg = self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
+		self.image_bg = self.canvas.create_image(0, 0, anchor=tk.NW, image=img, tags="IMG")
 		self.canvas.pack()
 
 		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.largeur, height=56/100*self.hauteur, bg="red")
@@ -119,7 +119,7 @@ class Game():
 		self.frame_joueurs.columnconfigure(0, weight=1)
 		self.frame_joueurs.columnconfigure(1, weight=1)
 		self.frame_joueurs_liste = []
-		self.window_joueurs = self.canvas.create_window(747,87,window=self.frame_joueurs, anchor=tk.NW)
+		self.window_joueurs = self.canvas.create_window(74.7/100*self.largeur, 15.48/100*self.hauteur, window=self.frame_joueurs, anchor=tk.NW)
 
 		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
 		self.frame_score.pack()
@@ -167,11 +167,10 @@ class Game():
 
 
 
-	def change_resolution(self, hauteur, largeur):
+	def change_resolution(self, largeur, hauteur):
 		self.hauteur = int(hauteur)
 		self.largeur = int(largeur)
 		#self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
-		self.canvas.config(height=self.hauteur, width=self.largeur)
 		"""
 		img = Image.open("nsi_computer.PNG")
 		img = img.resize((self.largeur,self.hauteur))
@@ -186,14 +185,30 @@ class Game():
 		img = ImageTk.PhotoImage(img)
 		test = self.canvas.create_image(100, 100, anchor=tk.NW, image=img)
 		"""
+		img1 = Image.open("nsi_computer.PNG")
+		img2 = img1.resize((self.largeur, self.hauteur), Image.ANTIALIAS)
+		img3 = ImageTk.PhotoImage(img3)
+		"""
+		self.canvas.delete("IMG")
+		self.canvas.create_image(0, 0, anchor=tk.NW, image=img3, tags="IMG")
+		self.canvas.pack()
+		"""
+		self.canvas.itemconfig(self.image_bg, image=img3)
+		#coord frame
 		self.frame_epreuve.config(width=57/100*self.largeur)
 		self.frame_epreuve.config(height=56/100*self.hauteur)
 		self.frame_epreuve.place(x=7.53/100*self.largeur, y=12.57/100*self.hauteur)
+		self.frame_joueurs.config(width=19.9/100*self.largeur)
+		self.frame_joueurs.config(height=26.3/100*self.hauteur)
+		self.frame_joueurs.place(x=74.7/100*self.largeur, y=15.48/100*self.hauteur)
+		self.frame_score.config(width=6.5/100*self.largeur)
+		self.frame_score.config(height=40/100*self.hauteur)
+		self.frame_score.place(x=81.05/100*self.largeur, y=46.98/100*self.hauteur)
 
 
-
+		#self.canvas.config(height=self.hauteur, width=self.largeur)
 		#self.canvas.pack()
-
+		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
 
 
 	def epreuve1(self, ep1_phrase):
@@ -251,7 +266,7 @@ class Game():
 			if a[0] == "resize":
 				self.change_resolution(a[1], a[2])
 			elif a[0] == "exit_console":
-				
+				pass
 			else:
 				client.printe("Unknow command : " + str(a))
 
