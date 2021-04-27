@@ -113,6 +113,7 @@ class Game():
 
 		self.frame_joueurs = tk.LabelFrame(self.fenetre, text="JOUEURS", width=19.9/100*self.largeur, height=26.3/100*self.hauteur, bg="blue")
 		self.frame_joueurs.pack(expand=True, fill="both")
+		self.frame_joueurs.grid_propagate(0)
 		self.frame_joueurs.rowconfigure(0, weight=1)
 		self.frame_joueurs.rowconfigure(1, weight=1)
 		self.frame_joueurs.rowconfigure(2, weight=1)
@@ -187,7 +188,7 @@ class Game():
 		"""
 		img1 = Image.open("nsi_computer.PNG")
 		img2 = img1.resize((self.largeur, self.hauteur), Image.ANTIALIAS)
-		img3 = ImageTk.PhotoImage(img3)
+		img3 = ImageTk.PhotoImage(img2)
 		"""
 		self.canvas.delete("IMG")
 		self.canvas.create_image(0, 0, anchor=tk.NW, image=img3, tags="IMG")
@@ -248,7 +249,11 @@ class Game():
 		self.console_entree = tk.Entry(frame_entree)
 		self.console_entree.pack(anchor="s", fill=tk.X)
 		#
+		self.console_historique = []
+		self.console_historique_nb = 0
 		fenetre.bind("<Return>", self.console_tri)
+		fenetre.bind("<Up>", self.console_fleche)
+		fenetre.bind("<Down>", self.console_fleche)
 
 
 	def console_tri(self, event):
@@ -269,6 +274,23 @@ class Game():
 				pass
 			else:
 				client.printe("Unknow command : " + str(a))
+		self.console_entree.delete(0, tk.END)
+		self.console_historique.append(msg)
+
+
+	def console_fleche(self, event):
+		print(event)
+		print(str(event.keysym == "Up"))
+		print(self.console_historique)
+		if str(event.keysym) == "Up":
+			self.console_historique_nb += -1
+		elif str(event.keysym) == "Down":
+			self.console_historique_nb += 1
+		try:
+			self.console_entree.insert(0, self.console_historique[self.console_historique_nb])
+		except:
+			pass
+
 
 
 

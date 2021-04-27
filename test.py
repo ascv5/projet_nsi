@@ -2,6 +2,8 @@ import tkinter as tk
 
 
 def add(nb, color):
+	if nb%2 == 1:
+		return 0
 	print(color)
 	temp_frame = tk.LabelFrame(frame, bg=color, text=str(nb))
 	temp_frame.grid(row=nb//2, column=nb%2, sticky="nesw")
