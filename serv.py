@@ -63,15 +63,28 @@ class BackGame():
 
 	def add_player(self, ide, info):
 		self.joueur[ide] = ast.literal_eval(str(info))
+		self.joueur[ide]["ide"] = ide
 		self.joueur[ide]["score"] = 0
 		print(self.joueur)
+		#envoie aux autres joueurs :
+		#AUTRE
+		for a in range(0, len(client_thread)):
+			if a != ide:
+				client_thread[a].send("new_player§"+str(self.joueur[ide]))
+		#PERSO
+		for a, b in self.joueur.items():
+			if a != ide:
+				client_thread[ide].send("new_player§"+str(b))
+
 
 
 	def lancer_game(self):
 		print("LANCEMENT")
 		for a in client_thread:
 			a.send("lancer")
+
 			a.send("epreuve§ep1§phrasephrase")
+			self.epreuve_en_cour = 1
 
 
 
@@ -86,9 +99,10 @@ client_thread = []
 
 tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-tcpsock.bind(("",5555))
+tcpsock.bind(("",6666))
 
 ide = 0
+print("SERV IS RUNNING")
 while True:
 	tcpsock.listen(10)
 	(clientsocket, (ip, port)) = tcpsock.accept()
