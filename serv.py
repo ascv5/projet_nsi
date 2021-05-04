@@ -3,7 +3,7 @@ import _thread
 import threading
 import time
 import ast
-
+import tools
 
 class Client(threading.Thread):
 	"""
@@ -83,7 +83,7 @@ class BackGame():
 		for a in client_thread:
 			a.send("lancer")
 
-			a.send("epreuve§ep1§phrasephrase")
+			a.send("epreuve§ep1§"+ str(tools.choix_phrase))
 			self.epreuve_en_cour = 1
 
 
