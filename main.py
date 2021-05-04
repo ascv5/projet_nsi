@@ -258,6 +258,7 @@ class Game():
 
 	def console_tri(self, event):
 		msg = self.console_entree.get()
+		client.printe(msg)
 		a = msg.split(" ")
 		if a[0] == "serv":
 			client.send(str(" ".join(msg.split(" ")[1:])))
@@ -313,8 +314,9 @@ Game()
 
 """
 A FAIRE:
-RESIZE
-PLACE LES FRAMES DE FACON DYNAMIQUES
+RESIZE (fond)
+pauffiner console
+serv : gérer les deconnection
 PREMIERE EPREUVE
 
 
