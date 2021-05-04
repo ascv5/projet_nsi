@@ -215,7 +215,7 @@ class Game():
 	def epreuve1(self, ep1_phrase):
 		self.epreuve_en_cour = 1
 		self.ep1_phrase = ep1_phrase
-		label = tk.Label(self.frame_epreuve, text="RIEN")
+		label = tk.Label(self.frame_epreuve, text=str(ep1_phrase))
 		label.pack()
 		self.ep1_entry = tk.Entry(self.frame_epreuve)
 		self.ep1_entry.pack()
@@ -319,5 +319,14 @@ pauffiner console
 serv : gérer les deconnection
 PREMIERE EPREUVE
 
+
+
+
+Burguer quizz
+
+
+
+Geoguessr
+mémori
 
 """
