@@ -44,10 +44,13 @@ class Client():
 				elif a[0] == "epreuve":
 					if a[1] == "ep1":
 						game.epreuve1(a[2])
+					elif a[1] == "ep2":
+						game.epreuve2(a[2],a[3],a[4],a[5])
 				elif a[0] == "new_player":
 					game.add_player(a[1])
 				else:
 					print("Unknow command : " + str(a))
+
 
 
 	def send(self, msg):
@@ -215,11 +218,29 @@ class Game():
 	def epreuve1(self, ep1_phrase):
 		self.epreuve_en_cour = 1
 		self.ep1_phrase = ep1_phrase
-		label = tk.Label(self.frame_epreuve, text=str(ep1_phrase))
+		label = tk.Label(self.frame_epreuve, text="RIEN")
 		label.pack()
 		self.ep1_entry = tk.Entry(self.frame_epreuve)
 		self.ep1_entry.pack()
 		self.ep_time_begin = time.time()
+
+
+
+
+	def epreuve2(self, ep2_question, ep2_choix1, ep2_choix2, ep2_reponse):
+		self.epreuve_en_cour = 2
+		self.ep2_reponse = ep2_reponse
+		label = tk.Label(self.frame_epreuve, text=str(ep2_question))
+		label.pack()
+		bouton1 = tk.Button(self.frame_epreuve, text=ep2_choix1, command=lambda:[self.actualize(None, voulu=True, bouton=1)])
+		bouton1.pack()
+		bouton2 = tk.Button(self.frame_epreuve, text='les deux', command=lambda:[self.actualize(None, voulu=True, bouton=2)])
+		bouton2.pack()
+		bouton3 = tk.Button(self.frame_epreuve, text=ep2_choix2, command=lambda:[self.actualize(None, voulu=True, bouton=3)])
+		bouton3.pack()
+        
+
+
 
 
 
@@ -295,12 +316,21 @@ class Game():
 
 
 
-	def actualize(self, KeyRelease):
+	def actualize(self, KeyRelease, voulu=False, bouton=None):
 		if self.epreuve_en_cour == 1:
 			if tools.verif_text(self.ep1_phrase, self.ep1_entry.get()) == True:
 				#EPREUVE 1 REUSSI
 				temps = time.time() - self.ep_time_begin
 				client.send("epreuve_finish§" + str(temps))
+		if self.epreuve_en_cour == 2:
+			if voulu == True: 
+				if bouton == int(self.ep2_reponse):
+					print("gg")
+				else :
+					print("tu es une merde")
+
+
+
 
 
 
@@ -319,14 +349,5 @@ pauffiner console
 serv : gérer les deconnection
 PREMIERE EPREUVE
 
-
-
-
-Burguer quizz
-
-
-
-Geoguessr
-mémori
 
 """
