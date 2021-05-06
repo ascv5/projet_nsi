@@ -42,6 +42,8 @@ class Client(threading.Thread):
 				elif a[0] == "get":
 					#chantier
 					pass
+				elif a[0] == "epreuve_finish":
+					jeu.fin_epreuve(self.ide)
 				elif a[0] == "EXEC":
 					exec(str(a[1]))
 				else:
@@ -85,7 +87,13 @@ class BackGame():
 
 			#a.send("epreuve§ep1§"+ str(tools.choix_phrase())) 
 			a.send("epreuve§ep2§"+ str(tools.ep2_choix_question()))
-			self.epreuve_en_cour = 1
+			self.epreuve_en_cour = 2
+
+
+	def fin_epreuve(self, ide):
+		if self.epreuve_en_cour == 2:
+			print("Player " + self.joueur[ide]["name"] + "(" + str(ide) + ") win epreuve 2")
+
 
 
 

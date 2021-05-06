@@ -114,16 +114,17 @@ class Game():
 		self.frame_epreuve.pack_propagate(0)
 		self.window_epreuve = self.canvas.create_window(7.53/100*self.largeur, 12.57/100*self.hauteur, window=self.frame_epreuve, anchor=tk.NW)
 
-		self.frame_joueurs = tk.LabelFrame(self.fenetre, text="JOUEURS", width=19.9/100*self.largeur, height=26.3/100*self.hauteur, bg="blue")
-		self.frame_joueurs.pack(expand=True, fill="both")
+		self.frame_joueurs = tk.Frame(self.fenetre, width=19.9/100*self.largeur, height=26.3/100*self.hauteur, bg="blue")
+		self.frame_joueurs.pack(fill="both")
 		self.frame_joueurs.grid_propagate(0)
 		self.frame_joueurs.rowconfigure(0, weight=1)
 		self.frame_joueurs.rowconfigure(1, weight=1)
-		self.frame_joueurs.rowconfigure(2, weight=1)
+		#self.frame_joueurs.rowconfigure(2, weight=1)
 		self.frame_joueurs.columnconfigure(0, weight=1)
 		self.frame_joueurs.columnconfigure(1, weight=1)
 		self.frame_joueurs_liste = []
 		self.window_joueurs = self.canvas.create_window(74.7/100*self.largeur, 15.48/100*self.hauteur, window=self.frame_joueurs, anchor=tk.NW)
+		self.create_players_frame(4)
 
 		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
 		self.frame_score.pack()
@@ -143,31 +144,26 @@ class Game():
 	def add_player(self, info):
 		info = ast.literal_eval(info)
 		self.other_player.append(info)
-		self.add_player_frame(info, len(self.other_player)-1)
+		self.frame_joueurs_liste[len(self.other_player)-1]["nom"].config(text=info["name"])
+		self.frame_joueurs_liste[len(self.other_player)-1]["nom"].pack()
+		self.frame_joueurs_liste[len(self.other_player)-1]["score"].config(text=info["score"])
+		self.frame_joueurs_liste[len(self.other_player)-1]["score"].pack()
 
 
-	def add_player_frame(self, info, nb):
-		if nb < 2:
-			frame = tk.LabelFrame(self.frame_joueurs)
-			frame.grid(row=0, column=nb%2, sticky="nesw")
-			label_name = tk.Label(frame, text=info["name"])
-			label_name.pack()
-			label_ide = tk.Label(frame, text=info["ide"])
-			label_ide.pack()
-		elif nb < 4:
-			frame = tk.LabelFrame(self.frame_joueurs)
-			frame.grid(row=1, column=nb%2, sticky="nesw")
-			label_name = tk.Label(frame, text=info["name"])
-			label_name.pack()
-			label_ide = tk.Label(frame, text=info["ide"])
-			label_ide.pack()
-		elif nb < 6:
-			frame = tk.LabelFrame(self.frame_joueurs)
-			frame.grid(row=2, column=nb%2, sticky="nesw")
-			label_name = tk.Label(frame, text=info["name"])
-			label_name.pack()
-			label_ide = tk.Label(frame, text=info["ide"])
-			label_ide.pack()
+
+	def create_players_frame(self, nb):
+		for a in range(0, nb):
+			print("//////////")
+			self.frame_joueurs_liste.append({})
+			self.frame_joueurs_liste[a]["frame"] = tk.LabelFrame(self.frame_joueurs)
+			self.frame_joueurs_liste[a]["frame"].grid(row=a//2, column=a%2, sticky="NESW")
+			self.frame_joueurs_liste[a]["nom"] = tk.Label(self.frame_joueurs_liste[a]["frame"])
+			self.frame_joueurs_liste[a]["nom"].pack()
+			self.frame_joueurs_liste[a]["nom"].pack_forget()
+			self.frame_joueurs_liste[a]["score"] = tk.Label(self.frame_joueurs_liste[a]["frame"])
+			self.frame_joueurs_liste[a]["score"].pack()
+			self.frame_joueurs_liste[a]["score"].pack_forget()
+		#Penser a gerer les cas de + ou - de joueur
 
 
 
@@ -326,6 +322,7 @@ class Game():
 			if voulu == True: 
 				if bouton == int(self.ep2_reponse):
 					print("gg")
+					client.send("epreuve_finish")
 				else :
 					print("tu es une merde")
 
