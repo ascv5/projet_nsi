@@ -83,7 +83,8 @@ class BackGame():
 		for a in client_thread:
 			a.send("lancer")
 
-			a.send("epreuve§ep1§"+ str(tools.choix_phrase()))
+			#a.send("epreuve§ep1§"+ str(tools.choix_phrase())) 
+			a.send("epreuve§ep2§"+ str(tools.ep2_choix_question()))
 			self.epreuve_en_cour = 1
 
 
