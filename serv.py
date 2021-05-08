@@ -42,6 +42,8 @@ class Client(threading.Thread):
 				elif a[0] == "get":
 					#chantier
 					pass
+				elif a[0] == "scoring":
+					jeu.scoring(a[1], a[2])
 				elif a[0] == "epreuve_finish":
 					jeu.fin_epreuve(self.ide)
 				elif a[0] == "EXEC":
@@ -78,6 +80,12 @@ class BackGame():
 			if a != ide:
 				client_thread[ide].send("new_player§"+str(b))
 
+
+	def scoring(self, ide, nb=1):
+		self.joueur[int(ide)]["score"] += int(nb)
+		for a in client_thread:
+			a.send("scoring§"+str(ide)+"§"+str(nb))
+		print(self.joueur)
 
 
 	def lancer_game(self):

@@ -41,6 +41,9 @@ class Client():
 					game.lancer()
 				elif a[0] == "CONNECTED":
 					self.printe("connected (thread : " + a[1] + " )")
+					self.ide = a[1]
+				elif a[0] == "scoring":
+					game.scoring(a[1], a[2])
 				elif a[0] == "epreuve":
 					if a[1] == "ep1":
 						game.epreuve1(a[2])
@@ -86,13 +89,14 @@ class Client():
 class Game():
 
 	def __init__(self):
+		self.score = 0
 		"""
 		///
 		///
 		variable self : 
 		log : Label du texte de la console
 		"""
-		self.other_player = []
+		self.other_player = {}
 		#§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§
 		self.fenetre = tk.Tk()
 		self.hauteur = 562
@@ -143,15 +147,28 @@ class Game():
 
 	def add_player(self, info):
 		info = ast.literal_eval(info)
-		self.other_player.append(info)
-		self.frame_joueurs_liste[len(self.other_player)-1]["nom"].config(text=info["name"])
-		self.frame_joueurs_liste[len(self.other_player)-1]["nom"].pack()
-		self.frame_joueurs_liste[len(self.other_player)-1]["score"].config(text=info["score"])
-		self.frame_joueurs_liste[len(self.other_player)-1]["score"].pack()
+		ide = len(self.other_player)
+		self.other_player[ide] = info
+		self.other_player[ide]["frame_nb"] = self.player_frame_count
+		self.frame_joueurs_liste[self.player_frame_count]["nom"].config(text=info["name"])
+		self.frame_joueurs_liste[self.player_frame_count]["nom"].pack()
+		self.frame_joueurs_liste[self.player_frame_count]["score"].config(text=info["score"])
+		self.frame_joueurs_liste[self.player_frame_count]["score"].pack()
+		self.player_frame_count += 1
+		print(self.other_player)
 
+
+	def scoring(self, ide, nb):
+		if int(ide) == int(client.ide):
+			self.score += int(nb)
+		else:
+			self.other_player[int(ide)]["score"] += int(nb)
+			self.frame_joueurs_liste[self.other_player[int(ide)]["frame_nb"]]["score"].config(text=str(self.other_player[int(ide)]["score"])) #marche pas pck ide != ide
+		print(self.other_player)
 
 
 	def create_players_frame(self, nb):
+		self.player_frame_count = 0
 		for a in range(0, nb):
 			print("//////////")
 			self.frame_joueurs_liste.append({})
