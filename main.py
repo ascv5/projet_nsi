@@ -147,7 +147,7 @@ class Game():
 
 	def add_player(self, info):
 		info = ast.literal_eval(info)
-		ide = len(self.other_player)
+		ide = int(info["ide"])
 		self.other_player[ide] = info
 		self.other_player[ide]["frame_nb"] = self.player_frame_count
 		self.frame_joueurs_liste[self.player_frame_count]["nom"].config(text=info["name"])
@@ -311,20 +311,27 @@ class Game():
 				client.printe("Unknow command : " + str(a))
 		self.console_entree.delete(0, tk.END)
 		self.console_historique.append(msg)
+		self.console_historique_nb = 0
 
 
 	def console_fleche(self, event):
-		print(event)
-		print(str(event.keysym == "Up"))
-		print(self.console_historique)
+		self.console_entree.delete(0, tk.END)
 		if str(event.keysym) == "Up":
 			self.console_historique_nb += -1
 		elif str(event.keysym) == "Down":
 			self.console_historique_nb += 1
-		try:
-			self.console_entree.insert(0, self.console_historique[self.console_historique_nb])
-		except:
-			pass
+		if abs(self.console_historique_nb) > len(self.console_historique) or self.console_historique_nb < 0:
+			if str(event.keysym) == "Up":
+				self.console_historique_nb += 1
+			elif str(event.keysym) == "Down":
+				self.console_historique_nb += -1
+		else:
+			try:
+				print(self.console_historique)
+				print(self.console_historique_nb)
+				self.console_entree.insert(0, self.console_historique[self.console_historique_nb])
+			except:
+				pass
 
 
 

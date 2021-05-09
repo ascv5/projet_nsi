@@ -37,6 +37,8 @@ class Client(threading.Thread):
 					print("+NEW_PLAYER : " + str(a[1]))
 					jeu.add_player(self.ide, str(a[1]))
 					self.send("CONNECTED§"+str(self.ide))
+				elif a[0] == "deco":
+					jeu.deco(a[1])
 				elif a[0] == "lancer":
 					jeu.lancer_game()
 				elif a[0] == "get":
@@ -72,13 +74,24 @@ class BackGame():
 		print(self.joueur)
 		#envoie aux autres joueurs :
 		#AUTRE
-		for a in range(0, len(client_thread)):
+		for a in client_thread.keys():
 			if a != ide:
 				client_thread[a].send("new_player§"+str(self.joueur[ide]))
 		#PERSO
 		for a, b in self.joueur.items():
 			if a != ide:
 				client_thread[ide].send("new_player§"+str(b))
+
+
+	def deco(self, ide):
+		ide = int(ide)
+		print(self.joueur)
+		print(client_thread)
+		del self.joueur[ide]
+		del client_thread[ide]
+		print(self.joueur)
+		print(client_thread)
+
 
 
 	def scoring(self, ide, nb=1):
@@ -90,11 +103,11 @@ class BackGame():
 
 	def lancer_game(self):
 		print("LANCEMENT")
-		for a in client_thread:
-			a.send("lancer")
+		for a in client_thread.keys():
+			client_thread[a].send("lancer")
 
 			#a.send("epreuve§ep1§"+ str(tools.choix_phrase())) 
-			a.send("epreuve§ep2§"+ str(tools.ep2_choix_question()))
+			client_thread[a].send("epreuve§ep2§"+ str(tools.ep2_choix_question()))
 			self.epreuve_en_cour = 2
 
 
@@ -111,7 +124,7 @@ class BackGame():
 jeu = BackGame()
 
 #||||||||||||||||||||||||||||||||CLIENT ACCEPTER||||||||||||||||||||||||||||||||
-client_thread = []
+client_thread = {}
 
 
 tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -123,7 +136,8 @@ print("SERV IS RUNNING")
 while True:
 	tcpsock.listen(10)
 	(clientsocket, (ip, port)) = tcpsock.accept()
-	client_thread.append(Client(ip, port, clientsocket, ide))
+	client_thread[ide] = (Client(ip, port, clientsocket, ide))
 	client_thread[ide].start()
+	print(client_thread)
 	ide += 1
 
