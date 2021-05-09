@@ -91,13 +91,16 @@ class BackGame():
 		del client_thread[ide]
 		print(self.joueur)
 		print(client_thread)
+		for a in client_thread.keys():
+			client_thread[a].send("deco§"+str(ide))
+
 
 
 
 	def scoring(self, ide, nb=1):
 		self.joueur[int(ide)]["score"] += int(nb)
-		for a in client_thread:
-			a.send("scoring§"+str(ide)+"§"+str(nb))
+		for a in client_thread.keys():
+			client_thread[a].send("scoring§"+str(ide)+"§"+str(nb))
 		print(self.joueur)
 
 

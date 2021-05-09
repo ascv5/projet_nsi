@@ -35,3 +35,12 @@ for a in range(0, 4):
 
 tk.mainloop()
 
+"""
+	def printe(self, a):
+		print(a)
+		#game.log.config(text=str(a))
+		b = game.console_log["text"]
+		b = b + '\n' + a
+		game.console_log.config(text=b)
+
+"""

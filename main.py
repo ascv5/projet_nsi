@@ -35,13 +35,15 @@ class Client():
 			for a in r:
 				a = a.split("§")
 				if a [0] == "ping":
-					self.printe("pong")
+					self.printe("pong", inpute=True)
 				elif a[0] == "lancer":
-					self.printe("lancement")
+					self.printe("lancement", inpute=True)
 					game.lancer()
 				elif a[0] == "CONNECTED":
-					self.printe("connected (thread : " + a[1] + " )")
+					self.printe("connected (thread : " + a[1] + " )", inpute=True)
 					self.ide = a[1]
+				elif a[0] == "deco":
+					game.deco(a[1])
 				elif a[0] == "scoring":
 					game.scoring(a[1], a[2])
 				elif a[0] == "epreuve":
@@ -68,20 +70,16 @@ class Client():
 			self.send(str(msg))
 
 
-	def printe(self, a):
+	def printe(self, a, error=False, inpute=False, output=False):
 		print(a)
-		"""
-		try:
-			game.log.config(text=str(a))
-		except:
-			pass
-		"""
-		#game.log.config(text=str(a))
-		b = game.console_log["text"]
-		b = b + "\n" + a
-		game.console_log.config(text=b)
-
-
+		if error == True:
+			tk.Label(game.frame_console, text=a, fg="red", bg="black").pack(anchor="nw")
+		elif inpute == True:
+			tk.Label(game.frame_console, text=a, fg="green", bg="black").pack(anchor="nw")
+		elif output == True:
+			tk.Label(game.frame_console, text=a, fg="blue", bg="black").pack(anchor="nw")
+		else:
+			tk.Label(game.frame_console, text=a, fg="white", bg="black").pack(anchor="nw")
 
 
 #||||||||||||||||||||||||||||||||PARTIE GRAPHIQUE||||||||||||||||||||||||||||||||
@@ -156,6 +154,7 @@ class Game():
 		self.frame_joueurs_liste[self.player_frame_count]["score"].pack()
 		self.player_frame_count += 1
 		print(self.other_player)
+		client.printe("[+]PLAYER " + str(info["name"]) + " (" + str(ide) + ")", inpute=True)
 
 
 	def scoring(self, ide, nb):
@@ -164,6 +163,18 @@ class Game():
 		else:
 			self.other_player[int(ide)]["score"] += int(nb)
 			self.frame_joueurs_liste[self.other_player[int(ide)]["frame_nb"]]["score"].config(text=str(self.other_player[int(ide)]["score"])) #marche pas pck ide != ide
+		print(self.other_player)
+		self.printe("player " + str(self.other_player[int(ide)]["name"]) + " (" + str(ide) + ") score " + str(nb) + " points", inpute=True)
+
+
+	def deco(self, ide):
+		print(self.other_player)
+		for a in self.other_player.keys():
+			print(self.other_player[a])
+			if int(self.other_player[a]["ide"]) == int(ide):
+				client.printe("[-]PLAYER " + str(self.other_player[a]["name"]) + " (" + str(ide) + ")", inpute=True)
+				del self.other_player[a]
+				break
 		print(self.other_player)
 
 
@@ -274,11 +285,11 @@ class Game():
 		#
 		frame_entree = tk.LabelFrame(fenetre, text="entree")
 		frame_entree.pack(side=tk.BOTTOM, fill=tk.X)
-		frame_console = tk.LabelFrame(fenetre, text="hisotrique")
-		frame_console.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+		self.frame_console = tk.LabelFrame(fenetre, text="hisotrique", bg="black")
+		self.frame_console.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 		#
-		frame_console.update()
-		self.console_log = tk.Label(frame_console, text="Bienvenue dans la console : \n", bg="red")
+		self.frame_console.update()
+		self.console_log = tk.Label(self.frame_console, text="Bienvenue dans la console : \n", bg="red")
 		self.console_log.pack(side=tk.TOP, anchor=tk.NW)
 		self.console_entree = tk.Entry(frame_entree)
 		self.console_entree.pack(anchor="s", fill=tk.X)
@@ -292,7 +303,7 @@ class Game():
 
 	def console_tri(self, event):
 		msg = self.console_entree.get()
-		client.printe(msg)
+		client.printe(msg, output=True)
 		a = msg.split(" ")
 		if a[0] == "serv":
 			client.send(str(" ".join(msg.split(" ")[1:])))
@@ -308,7 +319,7 @@ class Game():
 			elif a[0] == "exit_console":
 				pass
 			else:
-				client.printe("Unknow command : " + str(a))
+				client.printe("Unknow command : " + str(a), output=True)
 		self.console_entree.delete(0, tk.END)
 		self.console_historique.append(msg)
 		self.console_historique_nb = 0
