@@ -15,6 +15,7 @@ class Client(threading.Thread):
 		print("+NEW_THREAD : IP : " + ip + "| id : " + str(ide))
 		self.clientsocket = clientsocket
 		self.ide = ide
+		self.finish = False
 
 
 	def run(self):
@@ -23,8 +24,18 @@ class Client(threading.Thread):
 
 	def listen(self):
 		#---> TRY
-		while True:
-			r = self.clientsocket.recv(2048)
+		while self.finish == False:
+			try:
+				r = self.clientsocket.recv(2048)
+			except:
+				if self.finish == False:
+					print("Connection lost with thread " + str(self.ide))
+					print("1111111111111111111111")
+					print(self.finish)
+					jeu.deco(self.ide)
+				else:
+					pass
+				break
 			r = r.decode()
 			r = r.split("|")
 			del r[-1]
@@ -52,11 +63,19 @@ class Client(threading.Thread):
 					exec(str(a[1]))
 				else:
 					print("commande inconu : " + str(a))
+		print("555555555555555555555555555555")
 		#print("Connection error with id : " + str(self.ide) + " or in dvp bug")
 
 
 	def send(self, msg):
 		self.clientsocket.send(str(msg+"|").encode())
+
+
+	def arret(self):
+		print("3333333333333333333333333333")
+		print("[-]  thread " + str(self.ide))
+		self.finish = True
+		print("444444444444444444444444")
 
 
 
@@ -84,7 +103,9 @@ class BackGame():
 
 
 	def deco(self, ide):
+		print("222222222222222222222222222")
 		ide = int(ide)
+		client_thread[ide].arret()
 		print(self.joueur)
 		print(client_thread)
 		del self.joueur[ide]
