@@ -164,7 +164,7 @@ class Game():
 			self.other_player[int(ide)]["score"] += int(nb)
 			self.frame_joueurs_liste[self.other_player[int(ide)]["frame_nb"]]["score"].config(text=str(self.other_player[int(ide)]["score"])) #marche pas pck ide != ide
 		print(self.other_player)
-		self.printe("player " + str(self.other_player[int(ide)]["name"]) + " (" + str(ide) + ") score " + str(nb) + " points", inpute=True)
+		client.printe("player " + str(self.other_player[int(ide)]["name"]) + " (" + str(ide) + ") score " + str(nb) + " points", inpute=True)
 
 
 	def deco(self, ide):

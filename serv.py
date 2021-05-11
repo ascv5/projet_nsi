@@ -126,6 +126,7 @@ class BackGame():
 
 
 	def lancer_game(self):
+		#TRAVAILLE
 		print("LANCEMENT")
 		for a in client_thread.keys():
 			client_thread[a].send("lancer")
