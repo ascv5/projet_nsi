@@ -8,7 +8,7 @@ def verif_text(texte1, texte2):
 	else:
 		return False
 
-def choix_phrase():
+def ep1_choix_phrase():
 	liste = []
 	f = open("data/ep1/phrases.txt", "r")
 	for a in f :
@@ -23,7 +23,7 @@ def ep2_choix_question(theme):
 	f = "".join(f).split("\n")
 	for a in f[2:]:
 		liste.append(a)
-	liste = random.choice(liste)
+	liste = random.choice(liste[:-1])
 	liste = ''.join(liste).split(';')
 	return "§".join(liste)
 
@@ -36,6 +36,12 @@ def ep2_choix_theme():
 	return f[1].split(";")
 
 
-print(ep2_choix_question(ep2_choix_theme()))
-#print(ep2_choix_question())
+
+
+def test():
+	for a in range(0, 10):
+		print(ep2_choix_question(['Un clone', 'Un clown', '1']))
+
+#print(ep2_choix_question(ep2_choix_theme()))
+#print(ep2_choix_question(ep2_choix_theme()))
 

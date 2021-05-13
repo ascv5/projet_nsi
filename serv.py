@@ -3,6 +3,7 @@ import _thread
 import threading
 import time
 import ast
+import random
 import tools
 
 class Client(threading.Thread):
@@ -57,8 +58,8 @@ class Client(threading.Thread):
 					pass
 				elif a[0] == "scoring":
 					jeu.scoring(a[1], a[2])
-				elif a[0] == "epreuve_finish":
-					jeu.fin_epreuve(self.ide)
+				elif a[0] == "round_finish":
+					jeu.fin_round(self.ide)
 				elif a[0] == "EXEC":
 					exec(str(a[1]))
 				else:
@@ -84,6 +85,7 @@ class BackGame():
 
 	def __init__(self):
 		self.joueur = {}
+		#
 
 
 	def add_player(self, ide, info):
@@ -126,17 +128,78 @@ class BackGame():
 
 
 	def lancer_game(self):
-		#TRAVAILLE
-		print("LANCEMENT")
 		for a in client_thread.keys():
 			client_thread[a].send("lancer")
-
-			#a.send("epreuve§ep1§"+ str(tools.choix_phrase())) 
-			client_thread[a].send("epreuve§ep2§"+ str(tools.ep2_choix_question()))
-			self.epreuve_en_cour = 2
+		self.lancer_epreuve()
 
 
-	def fin_epreuve(self, ide):
+	def lancer_epreuve(self):
+		#TRAVAILLE
+		print("LANCEMENT")
+		self.epreuve_en_cour = random.randint(1, 3)
+		
+
+		self.epreuve_en_cour = 2
+		if self.epreuve_en_cour == 1:
+			_thread.start_new_thread(self.ep1, ())
+		elif self.epreuve_en_cour == 2:
+			_thread.start_new_thread(self.ep2, ())
+
+
+	def ep1(self, nb_round=5):
+		for a in client_thread.keys():
+			client_thread[a].send("choix_epreuve§"+str(self.epreuve_en_cour))
+		#
+		self.ep1_liste = []
+		nb = 0
+		self.ep1_finished = False
+		for a in range(0, nb_round):
+			print(a)
+			self.ep1_Nround()
+			while self.ep1_finished ==False:
+				pass
+
+	def ep1_Nround(self):
+		self.ep1_finished = False
+		print("oeoe")
+		phrase = str(tools.ep1_choix_phrase())
+		while phrase in self.ep1_liste:
+			phrase = str(tools.ep1_choix_phrase())
+
+		for a in client_thread.keys():
+			client_thread[a].send("epreuve§ep1§"+ phrase)
+			#client_thread[a].send("epreuve§ep1§"+ str(tools.ep2_choix_question()))
+
+
+	def ep2(self, nb_round=3):
+		theme = tools.ep2_choix_theme()
+		for a in client_thread.keys():
+			client_thread[a].send("choix_epreuve§"+str(self.epreuve_en_cour)+"§"+str(theme[0])+"§"+str(theme[1]))
+		#
+		self.ep2_liste = []
+		self.ep2_finished = False
+		print(theme)
+		for a in range(0, nb_round):
+			print(a)
+			self.ep2_Nround(theme)
+			while self.ep2_finished ==False:
+				pass
+
+
+	def ep2_Nround(self, theme):
+		self.ep2_finished = False
+		question = str(tools.ep2_choix_question(theme))
+		while question in self.ep2_liste:
+			question = str(tools.ep2_choix_question(theme))
+		for a in client_thread.keys():
+			client_thread[a].send("epreuve§ep2§"+tools.ep2_choix_question(theme))
+
+
+
+	def fin_round(self, ide):
+		if self.epreuve_en_cour == 1:
+			print("Player " + self.joueur[ide]["name"] + "(" + str(ide) + ") win round of epreuve 1")
+			self.ep1_finished = True
 		if self.epreuve_en_cour == 2:
 			print("Player " + self.joueur[ide]["name"] + "(" + str(ide) + ") win epreuve 2")
 
