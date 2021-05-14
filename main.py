@@ -1,3 +1,4 @@
+# coding: utf-8
 import socket
 import _thread
 import tkinter as tk
@@ -93,6 +94,7 @@ class Game():
 
 	def __init__(self):
 		self.score = 0
+		self.ide = None
 		"""
 		///
 		///
@@ -105,16 +107,21 @@ class Game():
 		self.hauteur = 562
 		self.largeur = 1000
 		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
-		self.fenetre.resizable(width=False, height=False)
+		#self.fenetre.resizable(width=False, height=False)
 		global game
 		game = self
 		#martin: inserstion graphique pc tout#
 		img = Image.open("nsi_computer.PNG")
 		img = img.resize((self.largeur,self.hauteur))
 		img = ImageTk.PhotoImage(img)
+
 		self.canvas = tk.Canvas(self.fenetre,width=self.largeur, height=self.hauteur)
-		self.image_bg = self.canvas.create_image(0, 0, anchor=tk.NW, image=img, tags="IMG")
 		self.canvas.pack()
+		"""
+		self.image_bg = tk.Label(self.canvas, image=img)
+		self.image_bg.pack(fill="both", expand="yes")
+		"""
+		self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
 
 		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.largeur, height=56/100*self.hauteur, bg="red")
 		self.frame_epreuve.pack()
@@ -136,7 +143,7 @@ class Game():
 		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
 		self.frame_score.pack()
 		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
-		
+
 		self.fenetre.bind("<KeyPress>", self.actualize)
 		#
 		#
@@ -165,9 +172,11 @@ class Game():
 	def scoring(self, ide, nb):
 		if int(ide) == int(client.ide):
 			self.score += int(nb)
+			client.printe("you" + " scored " + str(nb) + " points", inpute=True)
 		else:
 			self.other_player[int(ide)]["score"] += int(nb)
 			self.frame_joueurs_liste[self.other_player[int(ide)]["frame_nb"]]["score"].config(text=str(self.other_player[int(ide)]["score"])) #marche pas pck ide != ide
+			client.printe("player " + str(self.other_player[int(ide)]["name"]) + " (" + str(ide) + ") scored " + str(nb) + " points", inpute=True)
 		print(self.other_player)
 		client.printe("player " + str(self.other_player[int(ide)]["name"]) + " (" + str(ide) + ") score " + str(nb) + " points", inpute=True)
 
@@ -199,34 +208,26 @@ class Game():
 		#Penser a gerer les cas de + ou - de joueur
 
 
+	def change_resolutiondzadaz(self, l, h):
+		global img
+		"""
+		self.image_bg.destroy()
+		del self.image_bg
+		time.sleep(2)
+		"""
+		img = Image.open("nsi_computer.PNG")
+		img = img.resize((self.largeur,self.hauteur), Image.ANTIALIAS)
+		img = ImageTk.PhotoImage(img)
+		self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
 
 	def change_resolution(self, largeur, hauteur):
 		self.hauteur = int(hauteur)
 		self.largeur = int(largeur)
-		#self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
-		"""
+		global img
 		img = Image.open("nsi_computer.PNG")
-		img = img.resize((self.largeur,self.hauteur))
+		img = img.resize((self.largeur,self.hauteur), Image.ANTIALIAS)
 		img = ImageTk.PhotoImage(img)
-		self.image_bg = self.canvas.itemconfigure(self.image_bg, image=img)
-		"""
-		"""
-		self.canvas.delete(self.image_bg)
-		del self.image_bg
-		img = Image.open("nsi_computer.PNG")
-		img = img.resize((self.largeur,self.hauteur))
-		img = ImageTk.PhotoImage(img)
-		test = self.canvas.create_image(100, 100, anchor=tk.NW, image=img)
-		"""
-		img1 = Image.open("nsi_computer.PNG")
-		img2 = img1.resize((self.largeur, self.hauteur), Image.ANTIALIAS)
-		img3 = ImageTk.PhotoImage(img2)
-		"""
-		self.canvas.delete("IMG")
-		self.canvas.create_image(0, 0, anchor=tk.NW, image=img3, tags="IMG")
-		self.canvas.pack()
-		"""
-		self.canvas.itemconfig(self.image_bg, image=img3)
+		self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
 		#coord frame
 		self.frame_epreuve.config(width=57/100*self.largeur)
 		self.frame_epreuve.config(height=56/100*self.hauteur)
@@ -333,6 +334,8 @@ class Game():
 				self.change_resolution(a[1], a[2])
 			elif a[0] == "exit_console":
 				pass
+			elif a[0] == "info":
+				client.printe("Info : \n"+str(self.other_player)+"\nIDE: \n"+str(client.ide)+"\nMy score :\n"+str(self.score))
 			else:
 				client.printe("Unknow command : " + str(a), output=True)
 		self.console_entree.delete(0, tk.END)
@@ -395,6 +398,17 @@ RESIZE (fond)
 pauffiner console
 serv : gérer les deconnection
 PREMIERE EPREUVE
+
+
+"""
+
+
+"""
+THEMTIQUE EPREUVE
+BUG CHANGEMENT ROUND / EPREUVE (TEMPS ATTENTE, AFFIHAGE DE QUI GAGNE, ETC...)
+BUG INERFACE JOUEUR
+MENU DEMARER + INTRO
+RESIZE 
 
 
 """

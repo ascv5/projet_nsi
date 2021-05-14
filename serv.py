@@ -1,3 +1,4 @@
+# coding: utf-8
 import socket
 import _thread
 import threading
@@ -69,7 +70,17 @@ class Client(threading.Thread):
 
 
 	def send(self, msg):
-		self.clientsocket.send(str(msg+"|").encode())
+		try:
+			self.clientsocket.send(str(msg+"|").encode())
+		except:
+			print("bon tu clc")
+
+
+	def presend(self):
+		try:
+			self.clientsocket.send("alive?|".encode())
+		except:
+			jeu.deco(self.ide)
 
 
 	def arret(self):
@@ -88,6 +99,14 @@ class BackGame():
 		#
 
 
+	def presend(self):
+		for a in range(0, len(client_thread)):
+			try:
+				for a in client_thread.keys():
+					client_thread[a].presend()
+			except:
+				pass
+
 	def add_player(self, ide, info):
 		self.joueur[ide] = ast.literal_eval(str(info))
 		self.joueur[ide]["ide"] = ide
@@ -95,6 +114,7 @@ class BackGame():
 		print(self.joueur)
 		#envoie aux autres joueurs :
 		#AUTRE
+		self.presend()
 		for a in client_thread.keys():
 			if a != ide:
 				client_thread[a].send("new_player§"+str(self.joueur[ide]))
@@ -114,6 +134,7 @@ class BackGame():
 		del client_thread[ide]
 		print(self.joueur)
 		print(client_thread)
+		self.presend()
 		for a in client_thread.keys():
 			client_thread[a].send("deco§"+str(ide))
 
@@ -121,13 +142,16 @@ class BackGame():
 
 
 	def scoring(self, ide, nb=1):
+		#TRY
 		self.joueur[int(ide)]["score"] += int(nb)
+		self.presend()
 		for a in client_thread.keys():
 			client_thread[a].send("scoring§"+str(ide)+"§"+str(nb))
 		print(self.joueur)
 
 
 	def lancer_game(self):
+		self.presend()
 		for a in client_thread.keys():
 			client_thread[a].send("lancer")
 		self.lancer_epreuve()
@@ -139,7 +163,7 @@ class BackGame():
 		self.epreuve_en_cour = random.randint(1, 3)
 		
 
-		self.epreuve_en_cour = 2
+		self.epreuve_en_cour = 1
 		if self.epreuve_en_cour == 1:
 			_thread.start_new_thread(self.ep1, ())
 		elif self.epreuve_en_cour == 2:
@@ -147,6 +171,7 @@ class BackGame():
 
 
 	def ep1(self, nb_round=5):
+		self.presend()
 		for a in client_thread.keys():
 			client_thread[a].send("choix_epreuve§"+str(self.epreuve_en_cour))
 		#
@@ -166,6 +191,7 @@ class BackGame():
 		while phrase in self.ep1_liste:
 			phrase = str(tools.ep1_choix_phrase())
 
+		self.presend()
 		for a in client_thread.keys():
 			client_thread[a].send("epreuve§ep1§"+ phrase)
 			#client_thread[a].send("epreuve§ep1§"+ str(tools.ep2_choix_question()))
@@ -173,6 +199,7 @@ class BackGame():
 
 	def ep2(self, nb_round=3):
 		theme = tools.ep2_choix_theme()
+		self.presend()
 		for a in client_thread.keys():
 			client_thread[a].send("choix_epreuve§"+str(self.epreuve_en_cour)+"§"+str(theme[0])+"§"+str(theme[1]))
 		#
@@ -191,6 +218,7 @@ class BackGame():
 		question = str(tools.ep2_choix_question(theme))
 		while question in self.ep2_liste:
 			question = str(tools.ep2_choix_question(theme))
+		self.presend()
 		for a in client_thread.keys():
 			client_thread[a].send("epreuve§ep2§"+tools.ep2_choix_question(theme))
 
