@@ -131,11 +131,11 @@ class Game():
 		self.frame_joueurs = tk.Frame(self.fenetre, width=19.9/100*self.largeur, height=26.3/100*self.hauteur, bg="blue")
 		self.frame_joueurs.pack(fill="both")
 		self.frame_joueurs.grid_propagate(0)
-		self.frame_joueurs.rowconfigure(0, weight=1)
-		self.frame_joueurs.rowconfigure(1, weight=1)
+		self.frame_joueurs.rowconfigure(0, weight=1, uniform='row')
+		self.frame_joueurs.rowconfigure(1, weight=1, uniform='row')
 		#self.frame_joueurs.rowconfigure(2, weight=1)
-		self.frame_joueurs.columnconfigure(0, weight=1)
-		self.frame_joueurs.columnconfigure(1, weight=1)
+		self.frame_joueurs.columnconfigure(0, weight=1, uniform='row')
+		self.frame_joueurs.columnconfigure(1, weight=1, uniform='row')
 		self.frame_joueurs_liste = []
 		self.window_joueurs = self.canvas.create_window(74.7/100*self.largeur, 15.48/100*self.hauteur, window=self.frame_joueurs, anchor=tk.NW)
 		self.create_players_frame(4)
@@ -143,6 +143,16 @@ class Game():
 		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
 		self.frame_score.pack()
 		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
+
+
+		#MENU
+		menu_bare = tk.Menu(self.fenetre)
+		menu_view = tk.Menu(menu_bare)
+		menu_view.add_checkbutton(label="Fullscreen", command=self.fullscreen)
+
+		menu_bare.add_cascade(menu=menu_view, label="MAIN")
+		self.fenetre.config(menu=menu_bare)
+		self.fullscreen_state = False
 
 		self.fenetre.bind("<KeyPress>", self.actualize)
 		#
@@ -208,21 +218,12 @@ class Game():
 		#Penser a gerer les cas de + ou - de joueur
 
 
-	def change_resolutiondzadaz(self, l, h):
-		global img
-		"""
-		self.image_bg.destroy()
-		del self.image_bg
-		time.sleep(2)
-		"""
-		img = Image.open("nsi_computer.PNG")
-		img = img.resize((self.largeur,self.hauteur), Image.ANTIALIAS)
-		img = ImageTk.PhotoImage(img)
-		self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
 
 	def change_resolution(self, largeur, hauteur):
 		self.hauteur = int(hauteur)
 		self.largeur = int(largeur)
+		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
+		self.canvas.config(height=self.hauteur, width=self.largeur)
 		global img
 		img = Image.open("nsi_computer.PNG")
 		img = img.resize((self.largeur,self.hauteur), Image.ANTIALIAS)
@@ -241,8 +242,14 @@ class Game():
 
 
 		#self.canvas.config(height=self.hauteur, width=self.largeur)
-		#self.canvas.pack()
-		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
+
+
+	def fullscreen(self):
+		self.fullscreen_state = not self.fullscreen_state
+		self.fenetre.attributes('-fullscreen', self.fullscreen_state) 
+
+
+
 
 
 	def epreuve1(self):
@@ -391,24 +398,18 @@ Game()
 
 #{"name": "sacha", "autre": 10}
 
-
 """
-A FAIRE:
-RESIZE (fond)
-pauffiner console
-serv : gérer les deconnection
-PREMIERE EPREUVE
-
-
-"""
-
-
-"""
-THEMTIQUE EPREUVE
+THEMATIQUE EPREUVE
 BUG CHANGEMENT ROUND / EPREUVE (TEMPS ATTENTE, AFFIHAGE DE QUI GAGNE, ETC...)
 BUG INERFACE JOUEUR
 MENU DEMARER + INTRO
-RESIZE 
+
+1/5
 
 
+
+
+952-1049 = 97 (1366)
+284-356 = 72  (768)
+rapport : 100 largeure --> 74 hauteur
 """
