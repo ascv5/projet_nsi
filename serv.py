@@ -163,7 +163,7 @@ class BackGame():
 		self.epreuve_en_cour = random.randint(1, 3)
 		
 
-		self.epreuve_en_cour = 1
+		self.epreuve_en_cour = 2
 		if self.epreuve_en_cour == 1:
 			_thread.start_new_thread(self.ep1, ())
 		elif self.epreuve_en_cour == 2:
@@ -208,6 +208,7 @@ class BackGame():
 		print(theme)
 		for a in range(0, nb_round):
 			print(a)
+			time.sleep(5)
 			self.ep2_Nround(theme)
 			while self.ep2_finished ==False:
 				pass
@@ -228,8 +229,10 @@ class BackGame():
 		if self.epreuve_en_cour == 1:
 			print("Player " + self.joueur[ide]["name"] + "(" + str(ide) + ") win round of epreuve 1")
 			self.ep1_finished = True
-		if self.epreuve_en_cour == 2:
-			print("Player " + self.joueur[ide]["name"] + "(" + str(ide) + ") win epreuve 2")
+		elif self.epreuve_en_cour == 2:
+			print("Player " + self.joueur[ide]["name"] + "(" + str(ide) + ") win round epreuve 2")
+		for a in client_thread.keys():
+			client_thread[a].send("fin_round§"+str(ide))
 
 
 

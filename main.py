@@ -52,6 +52,8 @@ class Client():
 						game.epreuve1()
 					elif a[1] == "2":
 						game.epreuve2(a[2], a[3])
+				elif a[0] == "fin_round":
+					print(str(a[1]) + "win round ")
 				elif a[0] == "epreuve":
 					if a[1] == "ep1":
 						game.ep1_Nround(a[2])
@@ -276,10 +278,12 @@ class Game():
 		self.ep1_entry = tk.Entry(self.frame_epreuve)
 		self.ep1_entry.pack()
 		self.ep_time_begin = time.time()
+		self.ep1_nbround = 0
 
 
 	def ep1_Nround(self, ep1_phrase):
 		print("hm")
+		self.ep1_nbround += 1
 		self.ep1_phrase = ep1_phrase
 		self.ep1_label.config(text=ep1_phrase)
 
@@ -296,11 +300,13 @@ class Game():
 		bouton2.pack()
 		bouton3 = tk.Button(self.frame_epreuve, text=ep2_choix2, command=lambda:[self.actualize(None, voulu=True, bouton=3)])
 		bouton3.pack()
+		self.ep2_nbround = 0
 
 
 	def ep2_Nround(self, ep2_question, ep2_reponse):
 		self.ep2_label.config(text=ep2_question)
 		self.ep2_reponse = ep2_reponse
+		self.ep2_nbround += 1
         
 
 
@@ -398,7 +404,7 @@ class Game():
 			if voulu == True: 
 				if bouton == int(self.ep2_reponse):
 					print("gg")
-					client.send("epreuve_finish")
+					client.send("round_finish§" + str(temps))
 				else :
 					print("tu es une merde")
 
@@ -422,7 +428,9 @@ MENU DEMARER + INTRO
 
 1/5
 
-ptit bug menu a régler (mineur)
+ptit bug menu a régler (mineur)*
+
+PUBLIC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 
