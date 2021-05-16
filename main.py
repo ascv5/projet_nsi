@@ -147,8 +147,18 @@ class Game():
 
 		#MENU
 		menu_bare = tk.Menu(self.fenetre)
+		#
 		menu_view = tk.Menu(menu_bare)
 		menu_view.add_checkbutton(label="Fullscreen", command=self.fullscreen)
+		#
+		self.menu_size_nat = False
+		menu_size = tk.Menu(menu_view)
+		menu_size.add_checkbutton(label="848x480", onvalue=848, offvalue=not 848, variable=self.largeur, command=lambda:[self.change_resolution("848",  "480")])
+		menu_size.add_checkbutton(label="1000x562", onvalue=1000, offvalue=not 1000, variable=self.largeur, command=lambda:[self.change_resolution("1000",  "562")])
+		menu_size.add_checkbutton(label="1280x720", onvalue=1280, offvalue=not 1280, variable=self.largeur, command=lambda:[self.change_resolution("1280",  "720")])
+		menu_size.add_checkbutton(label="1920x1080", onvalue=1920, offvalue=not 1080, variable=self.largeur, command=lambda:[self.change_resolution("1920",  "1080")])
+		menu_size.add_checkbutton(label="Native ("+str(self.fenetre.winfo_screenwidth())+"x"+str(self.fenetre.winfo_screenheight())+")", onvalue=True, offvalue=False, variable=self.menu_size_nat, command=lambda:[self.change_resolution(str(self.fenetre.winfo_screenwidth()), str(self.fenetre.winfo_screenheight()))])
+		menu_view.add_cascade(menu=menu_size, label="Resolution")
 
 		menu_bare.add_cascade(menu=menu_view, label="MAIN")
 		self.fenetre.config(menu=menu_bare)
@@ -219,7 +229,12 @@ class Game():
 
 
 
-	def change_resolution(self, largeur, hauteur):
+	def change_resolution(self, largeur, hauteur, nat=False):
+		if nat == True:
+			self.menu_size_nat = True
+		else:
+			self.menu_size_nat = False
+
 		self.hauteur = int(hauteur)
 		self.largeur = int(largeur)
 		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
@@ -246,7 +261,8 @@ class Game():
 
 	def fullscreen(self):
 		self.fullscreen_state = not self.fullscreen_state
-		self.fenetre.attributes('-fullscreen', self.fullscreen_state) 
+		self.fenetre.attributes('-fullscreen', self.fullscreen_state)
+		self.change_resolution(str(self.fenetre.winfo_screenwidth()), str(self.fenetre.winfo_screenheight()))
 
 
 
@@ -405,6 +421,8 @@ BUG INERFACE JOUEUR
 MENU DEMARER + INTRO
 
 1/5
+
+ptit bug menu a régler (mineur)
 
 
 
