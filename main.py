@@ -19,9 +19,9 @@ class Client():
 
 
 
-	def connect(self, info):
+	def connect(self, info, ip):
 		self.clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.clientsocket.connect(("localhost", 6666))
+		self.clientsocket.connect((ip, 6666))
 		self.send("add_player"+"§"+str(info))
 		_thread.start_new_thread(self.listen, ())
 		_thread.start_new_thread(self.commande_cmd, ())
@@ -353,11 +353,11 @@ class Game():
 		if a[0] == "serv":
 			client.send(str(" ".join(msg.split(" ")[1:])))
 		elif a[0] == "connect":
-			client.connect(str(" ".join(msg.split(" ")[1:])))
+			client.connect(str(" ".join(msg.split(" ")[1:-1])), a[-1])
 		elif a[0] == "co":
-			client.connect("{'name':'sacha'}")
+			client.connect("{'name':'sacha'}", "localhost")
 		elif a[0] == "con":
-			client.connect("{'name':'test'}")
+			client.connect("{'name':'test'}", "localhost")
 		else:
 			if a[0] == "resize":
 				self.change_resolution(a[1], a[2])
