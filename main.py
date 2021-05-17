@@ -109,7 +109,7 @@ class Game():
 		self.hauteur = 562
 		self.largeur = 1000
 		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
-		#self.fenetre.resizable(width=False, height=False)
+		self.fenetre.resizable(width=False, height=False)
 		global game
 		game = self
 		#martin: inserstion graphique pc tout#
@@ -171,6 +171,9 @@ class Game():
 		#
 		#
 		self.epreuve_en_cour = None
+
+		#
+		tk.Label(self.fenetre, text="BETA BUILD 21-23/05/21, ", bg="grey", fg="white").place(x=0, y=0)
 		self.console()
 		tk.mainloop()
 
