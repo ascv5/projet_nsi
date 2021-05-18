@@ -113,7 +113,7 @@ class Game():
 		global game
 		game = self
 		#martin: inserstion graphique pc tout#
-		img = Image.open("nsi_computer.PNG")
+		img = Image.open("data/image/nsi_computer.PNG")
 		img = img.resize((self.largeur,self.hauteur))
 		img = ImageTk.PhotoImage(img)
 
@@ -153,13 +153,17 @@ class Game():
 		menu_view = tk.Menu(menu_bare)
 		menu_view.add_checkbutton(label="Fullscreen", command=self.fullscreen)
 		#
-		self.menu_size_nat = False
+		self.menu_size_nat = tk .BooleanVar()
+		self.menu_size_nat.set(False)
+		self.menu_size_size = tk.IntVar()
+		self.menu_size_size.set(self.largeur)
+
 		menu_size = tk.Menu(menu_view)
 		menu_size.add_checkbutton(label="848x480", onvalue=848, offvalue=not 848, variable=self.largeur, command=lambda:[self.change_resolution("848",  "480")])
 		menu_size.add_checkbutton(label="1000x562", onvalue=1000, offvalue=not 1000, variable=self.largeur, command=lambda:[self.change_resolution("1000",  "562")])
 		menu_size.add_checkbutton(label="1280x720", onvalue=1280, offvalue=not 1280, variable=self.largeur, command=lambda:[self.change_resolution("1280",  "720")])
 		menu_size.add_checkbutton(label="1920x1080", onvalue=1920, offvalue=not 1080, variable=self.largeur, command=lambda:[self.change_resolution("1920",  "1080")])
-		menu_size.add_checkbutton(label="Native ("+str(self.fenetre.winfo_screenwidth())+"x"+str(self.fenetre.winfo_screenheight())+")", onvalue=True, offvalue=False, variable=self.menu_size_nat, command=lambda:[self.change_resolution(str(self.fenetre.winfo_screenwidth()), str(self.fenetre.winfo_screenheight()))])
+		menu_size.add_checkbutton(label="Native ("+str(self.fenetre.winfo_screenwidth())+"x"+str(self.fenetre.winfo_screenheight())+")", onvalue=True, offvalue=False, variable=self.menu_size_nat, command=lambda:[self.change_resolution(str(self.fenetre.winfo_screenwidth()), str(self.fenetre.winfo_screenheight()), nat=True)])
 		menu_view.add_cascade(menu=menu_size, label="Resolution")
 
 		menu_bare.add_cascade(menu=menu_view, label="MAIN")
@@ -171,6 +175,7 @@ class Game():
 		#
 		#
 		self.epreuve_en_cour = None
+
 
 		#
 		tk.Label(self.fenetre, text="BETA BUILD 21-23/05/21, ", bg="grey", fg="white").place(x=0, y=0)
@@ -240,12 +245,13 @@ class Game():
 		else:
 			self.menu_size_nat = False
 
+		self.menu_size_size.set(largeur)
 		self.hauteur = int(hauteur)
 		self.largeur = int(largeur)
 		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
 		self.canvas.config(height=self.hauteur, width=self.largeur)
 		global img
-		img = Image.open("nsi_computer.PNG")
+		img = Image.open("data/image/nsi_computer.PNG")
 		img = img.resize((self.largeur,self.hauteur), Image.ANTIALIAS)
 		img = ImageTk.PhotoImage(img)
 		self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
@@ -260,14 +266,17 @@ class Game():
 		self.frame_score.config(height=40/100*self.hauteur)
 		self.frame_score.place(x=81.05/100*self.largeur, y=46.98/100*self.hauteur)
 
-
+		print(nat)
+		print(self.menu_size_nat)
+		print(self.largeur)
+		print("//////////////////")
 		#self.canvas.config(height=self.hauteur, width=self.largeur)
 
 
 	def fullscreen(self):
 		self.fullscreen_state = not self.fullscreen_state
 		self.fenetre.attributes('-fullscreen', self.fullscreen_state)
-		self.change_resolution(str(self.fenetre.winfo_screenwidth()), str(self.fenetre.winfo_screenheight()))
+		self.change_resolution(str(self.fenetre.winfo_screenwidth()), str(self.fenetre.winfo_screenheight()), nat=True)
 
 
 
