@@ -1,0 +1,11 @@
+#
+Erdogan;Hulk Hogan;0
+Joue dans Rocky 3;2
+Il a un nom de chaussure;2
+Il est fort comme un turc;3
+Ne croit pas trop à l'amitié turco-arménienne;1
+|
+Un clone;Un clown;1
+Peut faire rire;2
+Peut faire flipper;3
+Ils se ressemblent tous;1
