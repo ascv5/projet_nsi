@@ -1,2 +1,11 @@
-qui a le plus gros nez;Neywar;Sacho;2
-quand a ete ecrit la mastercalass je m appelle l ovni;en 1845;moyen age;1
+#
+Erdogan;Hulk Hogan;0
+Joue dans Rocky 3;2
+Il a un nom de chaussure;2
+Il est fort comme un turc;3
+Ne croit pas trop à l'amitié turco-arménienne;1
+|
+Un clone;Un clown;1
+Peut faire rire;2
+Peut faire flipper;3
+Ils se ressemblent tous;1
