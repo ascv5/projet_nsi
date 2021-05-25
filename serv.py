@@ -208,7 +208,6 @@ class BackGame():
 		print(theme)
 		for a in range(0, nb_round):
 			print(a)
-			time.sleep(5)
 			self.ep2_Nround(theme)
 			while self.ep2_finished ==False:
 				pass
@@ -231,6 +230,7 @@ class BackGame():
 			self.ep1_finished = True
 		elif self.epreuve_en_cour == 2:
 			print("Player " + self.joueur[ide]["name"] + "(" + str(ide) + ") win round epreuve 2")
+			self.ep2_finished = True
 		for a in client_thread.keys():
 			client_thread[a].send("fin_round§"+str(ide))
 
