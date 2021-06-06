@@ -151,7 +151,7 @@ class Game():
 
 
 		#
-		tk.Label(self.fenetre, text="BETA BUILD 21-23/05/21, ", bg="grey", fg="white").place(x=0, y=0)
+		tk.Label(self.fenetre, text="0.1", bg="grey", fg="white").place(x=0, y=0)
 		self.console()
 		tk.mainloop()
 
@@ -160,7 +160,7 @@ class Game():
 		self.intro_over = False
 		self.intro_lmain = tk.Label(self.fenetre)
 		self.intro_lmain.grid(row=0, column=0)
-		self.intro_cap = cv2.VideoCapture('intro.mp4')
+		self.intro_cap = cv2.VideoCapture('data/intro/intro.mp4')
 		_thread.start_new_thread(self.intro_play_audio, ())
 		_thread.start_new_thread(self.intro_show_frame, ())
 		print("aaaaaaaaaa")
@@ -178,17 +178,96 @@ class Game():
 			self.intro_lmain.after(10, self.intro_show_frame)
 		except:
 			self.intro_lmain.destroy()
-			self.setup_game()
+			self.setup_pregame()
 
 
 	def intro_play_audio(self):
 		try:
-			sound = winsound.PlaySound("intro.wav", winsound.SND_FILENAME)
+			sound = winsound.PlaySound("data/intro/intro.wav", winsound.SND_FILENAME)
 		except:
 			print("sound error")
 
 
 
+	def setup_pregame(self):
+		self.fenetre.rowconfigure(0, weight=3, uniform='row')
+		self.fenetre.rowconfigure(1, weight=2, uniform='row')
+		self.fenetre.rowconfigure(2, weight=2, uniform='row')
+		self.fenetre.rowconfigure(3, weight=2, uniform='row')
+		self.fenetre.columnconfigure(0, weight=1, uniform="row")
+		
+		
+		
+		frame_pp = tk.LabelFrame(self.fenetre, text="pp")
+		frame_pp.grid(column=0, row=0, sticky="NESW")
+		frame_ip = tk.LabelFrame(self.fenetre, text="ip")
+		frame_ip.grid(column=0, row=1, sticky="NESW")
+		frame_nom = tk.LabelFrame(self.fenetre, text="nom")
+		frame_nom.grid(column=0, row=2, sticky="NESW")
+		frame_lancer = tk.LabelFrame(self.fenetre, text="lancer")
+		frame_lancer.grid(column=0, row=3, sticky="NESW")
+		
+		
+		#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+		#PP
+		self.pp_choix = 0
+		
+		frame_pp.columnconfigure(0, weight=1, uniform="row")
+		frame_pp.columnconfigure(1, weight=1, uniform="row")
+		frame_pp.columnconfigure(2, weight=1, uniform="row")
+		frame_pp.columnconfigure(3, weight=1, uniform="row")
+		
+		pp_1_img = Image.open("data/image/pp_1.jpg")
+		pp_1_img = pp_1_img.resize((200,200))
+		pp_1_img = ImageTk.PhotoImage(pp_1_img)
+		boutton_pp_1 = tk.Button(frame_pp, image=pp_1_img, command=lambda:[self.pp_choix_selection(1)])
+		boutton_pp_1.grid(column=0, row=0, sticky="NESW")
+		
+		pp_2_img = Image.open("data/image/pp_1.jpg")
+		pp_2_img = pp_2_img.resize((200,200))
+		pp_2_img = ImageTk.PhotoImage(pp_2_img)
+		boutton_pp_2 = tk.Button(frame_pp, image=pp_2_img, command=lambda:[self.pp_choix_selection(2)])
+		boutton_pp_2.grid(column=1, row=0, sticky="NESW")
+		
+		pp_3_img = Image.open("data/image/pp_1.jpg")
+		pp_3_img = pp_3_img.resize((200,200))
+		pp_3_img = ImageTk.PhotoImage(pp_3_img)
+		boutton_pp_3 = tk.Button(frame_pp, image=pp_3_img, command=lambda:[self.pp_choix_selection(3)])
+		boutton_pp_3.grid(column=2, row=0, sticky="NESW")
+		
+		pp_4_img = Image.open("data/image/pp_a.jpg")
+		pp_4_img = pp_4_img.resize((200,200))
+		pp_4_img = ImageTk.PhotoImage(pp_4_img)
+		boutton_pp_4 = tk.Button(frame_pp, image=pp_4_img, command=lambda:[self.pp_choix_selection(0)])
+		boutton_pp_4.grid(column=3, row=0, sticky="NESW")
+		
+		#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+		#IP
+		frame_ip.columnconfigure(0, weight=1, uniform="row")
+		frame_ip.columnconfigure(1, weight=3, uniform="row")
+		
+		tk.Label(frame_ip, text="IP").grid(row=0, column=0, sticky="NESW")
+		ip_entree = tk.Entry(frame_ip)
+		ip_entree.grid(row=0, column=1)
+		#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+		#NOM
+		frame_nom.columnconfigure(0, weight=1, uniform="row")
+		frame_nom.columnconfigure(1, weight=3, uniform="row")
+		
+		tk.Label(frame_nom, text="NOM").grid(row=0, column=0, sticky="NESW")
+		nom_entree = tk.Entry(frame_nom)
+		nom_entree.grid(row=0, column=1)
+		#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+		#LANCEMENT
+		frame_lancer.columnconfigure(0, weight=1, uniform="row")
+		frame_lancer.rowconfigure(0, weight=1, uniform="row")
+
+		tk.Button(frame_lancer, text="lancer", command=lambda:[client.connect("{'name':'sacha'}", "localhost")]).grid(row=0, column=0, sticky="NESW")
+		print("gros pdf")
+
+
+	def pp_choix_selection(self, nb):
+		self.pp_choix = nb
 
 	def setup_game(self):
 		global game
@@ -222,7 +301,8 @@ class Game():
 		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
 		self.frame_score.pack()
 		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
-		self.resize(self.largeur, self.hauteur)
+		self.change_resolution(self.largeur, self.hauteur)
+
 
 
 
@@ -278,7 +358,6 @@ class Game():
 			self.frame_joueurs_liste[a]["score"].pack()
 			self.frame_joueurs_liste[a]["score"].pack_forget()
 		#Penser a gerer les cas de + ou - de joueur
-
 
 
 	def change_resolution(self, largeur, hauteur, nat=False):
@@ -501,3 +580,4 @@ PUBLIC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 284-356 = 72  (768)
 rapport : 100 largeure --> 74 hauteur
 """
+

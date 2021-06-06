@@ -122,12 +122,6 @@ import tkinter as tk
 from PIL import ImageTk, Image
 
 
-def pp_render_image(n):
-	img = Image.open("data/image/pp_"+str(n)+".jpg")
-	img = img.resize((200,200))
-	img = ImageTk.PhotoImage(img)
-	return img
-
 
 
 window = tk.Tk()
@@ -135,6 +129,7 @@ window = tk.Tk()
 window.rowconfigure(0, weight=3, uniform='row')
 window.rowconfigure(1, weight=2, uniform='row')
 window.rowconfigure(2, weight=2, uniform='row')
+window.rowconfigure(3, weight=2, uniform='row')
 window.columnconfigure(0, weight=1, uniform="row")
 
 
@@ -145,12 +140,16 @@ frame_ip = tk.LabelFrame(window, text="ip")
 frame_ip.grid(column=0, row=1, sticky="NESW")
 frame_nom = tk.LabelFrame(window, text="nom")
 frame_nom.grid(column=0, row=2, sticky="NESW")
-
-tk.Label(frame_ip, text="fzefzefzefzefzezeez").pack()
+frame_lancer = tk.LabelFrame(window, text="lancer")
+frame_lancer.grid(column=0, row=3, sticky="NESW")
 
 
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 #PP
+pp_choix = 0
+def pp_choix_selection(nb):
+	pp_choix = nb
+
 frame_pp.columnconfigure(0, weight=1, uniform="row")
 frame_pp.columnconfigure(1, weight=1, uniform="row")
 frame_pp.columnconfigure(2, weight=1, uniform="row")
@@ -159,28 +158,48 @@ frame_pp.columnconfigure(3, weight=1, uniform="row")
 pp_1_img = Image.open("data/image/pp_1.jpg")
 pp_1_img = pp_1_img.resize((200,200))
 pp_1_img = ImageTk.PhotoImage(pp_1_img)
-boutton_pp_1 = tk.Button(frame_pp, image=pp_1_img)
+boutton_pp_1 = tk.Button(frame_pp, image=pp_1_img, command=lambda:[pp_choix_selection(1)])
 boutton_pp_1.grid(column=0, row=0, sticky="NESW")
 
 pp_2_img = Image.open("data/image/pp_1.jpg")
 pp_2_img = pp_2_img.resize((200,200))
 pp_2_img = ImageTk.PhotoImage(pp_2_img)
-boutton_pp_2 = tk.Button(frame_pp, image=pp_2_img)
+boutton_pp_2 = tk.Button(frame_pp, image=pp_2_img, command=lambda:[pp_choix_selection(2)])
 boutton_pp_2.grid(column=1, row=0, sticky="NESW")
 
 pp_3_img = Image.open("data/image/pp_1.jpg")
 pp_3_img = pp_3_img.resize((200,200))
 pp_3_img = ImageTk.PhotoImage(pp_3_img)
-boutton_pp_3 = tk.Button(frame_pp, image=pp_3_img)
+boutton_pp_3 = tk.Button(frame_pp, image=pp_3_img, command=lambda:[pp_choix_selection(3)])
 boutton_pp_3.grid(column=2, row=0, sticky="NESW")
 
 pp_4_img = Image.open("data/image/pp_a.jpg")
 pp_4_img = pp_4_img.resize((200,200))
 pp_4_img = ImageTk.PhotoImage(pp_4_img)
-boutton_pp_4 = tk.Button(frame_pp, image=pp_4_img)
+boutton_pp_4 = tk.Button(frame_pp, image=pp_4_img, command=lambda:[pp_choix_selection(0)])
 boutton_pp_4.grid(column=3, row=0, sticky="NESW")
 
 #||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+#IP
+frame_ip.columnconfigure(0, weight=1, uniform="row")
+frame_ip.columnconfigure(1, weight=3, uniform="row")
+
+tk.Label(frame_ip, text="IP").grid(row=0, column=0, sticky="NESW")
+ip_entree = tk.Entry(frame_ip)
+ip_entree.grid(row=0, column=1)
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+#NOM
+frame_nom.columnconfigure(0, weight=1, uniform="row")
+frame_nom.columnconfigure(1, weight=3, uniform="row")
+
+tk.Label(frame_ip, text="NOM").grid(row=0, column=0, sticky="NESW")
+nom_entree = tk.Entry(frame_nom)
+nom_entree.grid(row=0, column=1)
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+#LANCEMENT
+frame_lancer.columnconfigure(0, weight=1, uniform="row")
+frame_lancer.rowconfigure(0, weight=1, uniform="row")
+tk.Button(frame_lancer, text="lancer").grid(row=0, column=0, sticky="NESW")
 
 
 window.mainloop()
@@ -202,7 +221,7 @@ A Faire:
 -Popup de win (round/epreuve/all)
 -finir menu demarrer
 -regler bug menu
--prier
+-
 
 
 
