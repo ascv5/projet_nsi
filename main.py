@@ -5,6 +5,8 @@ import tkinter as tk
 from PIL import ImageTk, Image
 import time
 import ast
+import cv2
+import winsound
 
 import tools
 
@@ -95,6 +97,8 @@ class Client():
 class Game():
 
 	def __init__(self):
+
+
 		self.score = 0
 		self.ide = None
 		"""
@@ -110,45 +114,12 @@ class Game():
 		self.largeur = 1000
 		self.fenetre.geometry(str(self.largeur)+"x"+str(self.hauteur))
 		self.fenetre.resizable(width=False, height=False)
-		global game
-		game = self
-		#martin: inserstion graphique pc tout#
-		img = Image.open("data/image/nsi_computer.PNG")
-		img = img.resize((self.largeur,self.hauteur))
-		img = ImageTk.PhotoImage(img)
-
-		self.canvas = tk.Canvas(self.fenetre,width=self.largeur, height=self.hauteur)
-		self.canvas.pack()
-		"""
-		self.image_bg = tk.Label(self.canvas, image=img)
-		self.image_bg.pack(fill="both", expand="yes")
-		"""
-		self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
-
-		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.largeur, height=56/100*self.hauteur, bg="red")
-		self.frame_epreuve.pack()
-		self.frame_epreuve.pack_propagate(0)
-		self.window_epreuve = self.canvas.create_window(7.53/100*self.largeur, 12.57/100*self.hauteur, window=self.frame_epreuve, anchor=tk.NW)
-
-		self.frame_joueurs = tk.Frame(self.fenetre, width=19.9/100*self.largeur, height=26.3/100*self.hauteur, bg="blue")
-		self.frame_joueurs.pack(fill="both")
-		self.frame_joueurs.grid_propagate(0)
-		self.frame_joueurs.rowconfigure(0, weight=1, uniform='row')
-		self.frame_joueurs.rowconfigure(1, weight=1, uniform='row')
-		#self.frame_joueurs.rowconfigure(2, weight=1)
-		self.frame_joueurs.columnconfigure(0, weight=1, uniform='row')
-		self.frame_joueurs.columnconfigure(1, weight=1, uniform='row')
-		self.frame_joueurs_liste = []
-		self.window_joueurs = self.canvas.create_window(74.7/100*self.largeur, 15.48/100*self.hauteur, window=self.frame_joueurs, anchor=tk.NW)
-		self.create_players_frame(4)
-
-		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
-		self.frame_score.pack()
-		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
 
 
 
-
+		self.intro()
+		print("test")
+		
 		#MENU
 		menu_bare = tk.Menu(self.fenetre)
 		#
@@ -183,6 +154,75 @@ class Game():
 		tk.Label(self.fenetre, text="BETA BUILD 21-23/05/21, ", bg="grey", fg="white").place(x=0, y=0)
 		self.console()
 		tk.mainloop()
+
+
+	def intro(self):
+		self.intro_over = False
+		self.intro_lmain = tk.Label(self.fenetre)
+		self.intro_lmain.grid(row=0, column=0)
+		self.intro_cap = cv2.VideoCapture('intro.mp4')
+		_thread.start_new_thread(self.intro_play_audio, ())
+		_thread.start_new_thread(self.intro_show_frame, ())
+		print("aaaaaaaaaa")
+		#self.intro_lmain.destroy()
+
+
+	def intro_show_frame(self):
+		try:
+			ret, frame = self.intro_cap.read()
+			cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+			img = Image.fromarray(cv2image).resize((self.largeur, self.hauteur))
+			imgtk = ImageTk.PhotoImage(image=img)
+			self.intro_lmain.imgtk = imgtk
+			self.intro_lmain.configure(image=imgtk)
+			self.intro_lmain.after(10, self.intro_show_frame)
+		except:
+			self.intro_lmain.destroy()
+			self.setup_game()
+
+
+	def intro_play_audio(self):
+		try:
+			sound = winsound.PlaySound("intro.wav", winsound.SND_FILENAME)
+		except:
+			print("sound error")
+
+
+
+
+	def setup_game(self):
+		global game
+		game = self
+		#martin: inserstion graphique pc tout#
+		img = Image.open("data/image/nsi_computer.PNG")
+		img = img.resize((self.largeur,self.hauteur))
+		img = ImageTk.PhotoImage(img)
+
+		self.canvas = tk.Canvas(self.fenetre,width=self.largeur, height=self.hauteur)
+		self.canvas.pack()
+		self.canvas.create_image(0, 0, anchor=tk.NW, image=img)
+
+		self.frame_epreuve = tk.LabelFrame(self.fenetre, text="EPREUVE", width=57/100*self.largeur, height=56/100*self.hauteur, bg="red")
+		self.frame_epreuve.pack()
+		self.frame_epreuve.pack_propagate(0)
+		self.window_epreuve = self.canvas.create_window(7.53/100*self.largeur, 12.57/100*self.hauteur, window=self.frame_epreuve, anchor=tk.NW)
+
+		self.frame_joueurs = tk.Frame(self.fenetre, width=19.9/100*self.largeur, height=26.3/100*self.hauteur, bg="blue")
+		self.frame_joueurs.pack(fill="both")
+		self.frame_joueurs.grid_propagate(0)
+		self.frame_joueurs.rowconfigure(0, weight=1, uniform='row')
+		self.frame_joueurs.rowconfigure(1, weight=1, uniform='row')
+		#self.frame_joueurs.rowconfigure(2, weight=1)
+		self.frame_joueurs.columnconfigure(0, weight=1, uniform='row')
+		self.frame_joueurs.columnconfigure(1, weight=1, uniform='row')
+		self.frame_joueurs_liste = []
+		self.window_joueurs = self.canvas.create_window(74.7/100*self.largeur, 15.48/100*self.hauteur, window=self.frame_joueurs, anchor=tk.NW)
+		self.create_players_frame(4)
+
+		self.frame_score = tk.LabelFrame(self.fenetre, text="SCORE", width=6.5/100*self.largeur, height=40/100*self.hauteur, bg="green")
+		self.frame_score.pack()
+		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
+		self.resize(self.largeur, self.hauteur)
 
 
 

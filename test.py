@@ -1,4 +1,4 @@
-
+"""
 import tkinter as tk
 
 
@@ -35,7 +35,7 @@ for a in range(0, 4):
 
 tk.mainloop()
 
-
+"""
 
 """
 	def printe(self, a):
@@ -76,4 +76,140 @@ root.bind("<Configure>", resize_bg)
 root.mainloop()
 """
 
+"""
+import cv2
+import tkinter as tk
+from PIL import ImageTk, Image
+import winsound
+import _thread
 
+
+
+
+def
+mainWindow = tk.Tk()
+lmain = tk.Label(mainWindow)
+lmain.grid(row=0, column=0)
+
+cap = cv2.VideoCapture('intro.mp4')
+
+def show_frame():
+	try:
+		ret, frame = cap.read()
+		cv2image   = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+		img   = Image.fromarray(cv2image).resize((760, 400))
+		imgtk = ImageTk.PhotoImage(image = img)
+		lmain.imgtk = imgtk
+		lmain.configure(image=imgtk)
+		lmain.after(10, show_frame)
+	except:
+		lmain.destroy()
+
+def play_audio():
+	try:
+		sound = winsound.PlaySound("intro.wav", winsound.SND_FILENAME)
+	except:
+		print("ayaya")
+
+
+
+_thread.start_new_thread(play_audio, ())
+show_frame()
+
+mainWindow.mainloop()  #Starts GUI
+"""
+import tkinter as tk
+from PIL import ImageTk, Image
+
+
+def pp_render_image(n):
+	img = Image.open("data/image/pp_"+str(n)+".jpg")
+	img = img.resize((200,200))
+	img = ImageTk.PhotoImage(img)
+	return img
+
+
+
+window = tk.Tk()
+
+window.rowconfigure(0, weight=3, uniform='row')
+window.rowconfigure(1, weight=2, uniform='row')
+window.rowconfigure(2, weight=2, uniform='row')
+window.columnconfigure(0, weight=1, uniform="row")
+
+
+
+frame_pp = tk.LabelFrame(window, text="pp")
+frame_pp.grid(column=0, row=0, sticky="NESW")
+frame_ip = tk.LabelFrame(window, text="ip")
+frame_ip.grid(column=0, row=1, sticky="NESW")
+frame_nom = tk.LabelFrame(window, text="nom")
+frame_nom.grid(column=0, row=2, sticky="NESW")
+
+tk.Label(frame_ip, text="fzefzefzefzefzezeez").pack()
+
+
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+#PP
+frame_pp.columnconfigure(0, weight=1, uniform="row")
+frame_pp.columnconfigure(1, weight=1, uniform="row")
+frame_pp.columnconfigure(2, weight=1, uniform="row")
+frame_pp.columnconfigure(3, weight=1, uniform="row")
+
+pp_1_img = Image.open("data/image/pp_1.jpg")
+pp_1_img = pp_1_img.resize((200,200))
+pp_1_img = ImageTk.PhotoImage(pp_1_img)
+boutton_pp_1 = tk.Button(frame_pp, image=pp_1_img)
+boutton_pp_1.grid(column=0, row=0, sticky="NESW")
+
+pp_2_img = Image.open("data/image/pp_1.jpg")
+pp_2_img = pp_2_img.resize((200,200))
+pp_2_img = ImageTk.PhotoImage(pp_2_img)
+boutton_pp_2 = tk.Button(frame_pp, image=pp_2_img)
+boutton_pp_2.grid(column=1, row=0, sticky="NESW")
+
+pp_3_img = Image.open("data/image/pp_1.jpg")
+pp_3_img = pp_3_img.resize((200,200))
+pp_3_img = ImageTk.PhotoImage(pp_3_img)
+boutton_pp_3 = tk.Button(frame_pp, image=pp_3_img)
+boutton_pp_3.grid(column=2, row=0, sticky="NESW")
+
+pp_4_img = Image.open("data/image/pp_a.jpg")
+pp_4_img = pp_4_img.resize((200,200))
+pp_4_img = ImageTk.PhotoImage(pp_4_img)
+boutton_pp_4 = tk.Button(frame_pp, image=pp_4_img)
+boutton_pp_4.grid(column=3, row=0, sticky="NESW")
+
+#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+
+window.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+A Faire:
+-Popup de win (round/epreuve/all)
+-finir menu demarrer
+-regler bug menu
+-prier
+
+
+
+
+
+
+
+
+
+"""
