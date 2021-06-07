@@ -43,6 +43,7 @@ class Client():
 					self.printe("lancement", inpute=True)
 					game.lancer()
 				elif a[0] == "CONNECTED":
+					game.setup_game()
 					self.printe("connected (thread : " + a[1] + " )", inpute=True)
 					self.ide = a[1]
 				elif a[0] == "deco":
@@ -97,7 +98,8 @@ class Client():
 class Game():
 
 	def __init__(self):
-
+		global game
+		game = self
 
 		self.score = 0
 		self.ide = None
@@ -118,32 +120,8 @@ class Game():
 
 
 		self.intro()
+		#self.setup_pregame()
 		print("test")
-		
-		#MENU
-		menu_bare = tk.Menu(self.fenetre)
-		#
-		menu_view = tk.Menu(menu_bare)
-		menu_view.add_checkbutton(label="Fullscreen", command=self.fullscreen)
-		#
-		self.menu_size_nat = tk .BooleanVar()
-		self.menu_size_nat.set(False)
-		self.menu_size_size = tk.IntVar()
-		self.menu_size_size.set(self.largeur)
-
-		menu_size = tk.Menu(menu_view)
-		menu_size.add_checkbutton(label="848x480", onvalue=848, offvalue=not 848, variable=self.largeur, command=lambda:[self.change_resolution("848",  "480")])
-		menu_size.add_checkbutton(label="1000x562", onvalue=1000, offvalue=not 1000, variable=self.largeur, command=lambda:[self.change_resolution("1000",  "562")])
-		menu_size.add_checkbutton(label="1280x720", onvalue=1280, offvalue=not 1280, variable=self.largeur, command=lambda:[self.change_resolution("1280",  "720")])
-		menu_size.add_checkbutton(label="1920x1080", onvalue=1920, offvalue=not 1080, variable=self.largeur, command=lambda:[self.change_resolution("1920",  "1080")])
-		menu_size.add_checkbutton(label="Native ("+str(self.fenetre.winfo_screenwidth())+"x"+str(self.fenetre.winfo_screenheight())+")", onvalue=True, offvalue=False, variable=self.menu_size_nat, command=lambda:[self.change_resolution(str(self.fenetre.winfo_screenwidth()), str(self.fenetre.winfo_screenheight()), nat=True)])
-		menu_view.add_cascade(menu=menu_size, label="Resolution")
-
-		menu_bare.add_cascade(menu=menu_view, label="MAIN")
-		self.fenetre.config(menu=menu_bare)
-		self.fullscreen_state = False
-
-		self.fenetre.bind("<KeyPress>", self.actualize)
 		#
 		#
 		#
@@ -157,12 +135,11 @@ class Game():
 
 
 	def intro(self):
-		self.intro_over = False
 		self.intro_lmain = tk.Label(self.fenetre)
 		self.intro_lmain.grid(row=0, column=0)
 		self.intro_cap = cv2.VideoCapture('data/intro/intro.mp4')
 		_thread.start_new_thread(self.intro_play_audio, ())
-		_thread.start_new_thread(self.intro_show_frame, ())
+		self.intro_show_frame()
 		print("aaaaaaaaaa")
 		#self.intro_lmain.destroy()
 
@@ -190,21 +167,25 @@ class Game():
 
 
 	def setup_pregame(self):
-		self.fenetre.rowconfigure(0, weight=3, uniform='row')
-		self.fenetre.rowconfigure(1, weight=2, uniform='row')
-		self.fenetre.rowconfigure(2, weight=2, uniform='row')
-		self.fenetre.rowconfigure(3, weight=2, uniform='row')
-		self.fenetre.columnconfigure(0, weight=1, uniform="row")
+		global pp_1_img, pp_2_img, pp_3_img, pp_4_img
+		self.pregame_frame = tk.Frame(self.fenetre)
+		self.pregame_frame.pack()
+
+		self.pregame_frame.rowconfigure(0, weight=3, uniform='row')
+		self.pregame_frame.rowconfigure(1, weight=2, uniform='row')
+		self.pregame_frame.rowconfigure(2, weight=2, uniform='row')
+		self.pregame_frame.rowconfigure(3, weight=2, uniform='row')
+		self.pregame_frame.columnconfigure(0, weight=1, uniform="row")
 		
 		
 		
-		frame_pp = tk.LabelFrame(self.fenetre, text="pp")
+		frame_pp = tk.LabelFrame(self.pregame_frame, text="pp")
 		frame_pp.grid(column=0, row=0, sticky="NESW")
-		frame_ip = tk.LabelFrame(self.fenetre, text="ip")
+		frame_ip = tk.LabelFrame(self.pregame_frame, text="ip")
 		frame_ip.grid(column=0, row=1, sticky="NESW")
-		frame_nom = tk.LabelFrame(self.fenetre, text="nom")
+		frame_nom = tk.LabelFrame(self.pregame_frame, text="nom")
 		frame_nom.grid(column=0, row=2, sticky="NESW")
-		frame_lancer = tk.LabelFrame(self.fenetre, text="lancer")
+		frame_lancer = tk.LabelFrame(self.pregame_frame, text="lancer")
 		frame_lancer.grid(column=0, row=3, sticky="NESW")
 		
 		
@@ -216,27 +197,30 @@ class Game():
 		frame_pp.columnconfigure(1, weight=1, uniform="row")
 		frame_pp.columnconfigure(2, weight=1, uniform="row")
 		frame_pp.columnconfigure(3, weight=1, uniform="row")
-		
+
 		pp_1_img = Image.open("data/image/pp_1.jpg")
-		pp_1_img = pp_1_img.resize((200,200))
+		print(pp_1_img)
+		pp_1_img = pp_1_img.resize((int(1000*(3*self.hauteur/10)/740),int((3*self.hauteur/10))))
+		print(pp_1_img)
 		pp_1_img = ImageTk.PhotoImage(pp_1_img)
+		print(pp_1_img)
 		boutton_pp_1 = tk.Button(frame_pp, image=pp_1_img, command=lambda:[self.pp_choix_selection(1)])
 		boutton_pp_1.grid(column=0, row=0, sticky="NESW")
-		
+
 		pp_2_img = Image.open("data/image/pp_1.jpg")
-		pp_2_img = pp_2_img.resize((200,200))
+		pp_2_img = pp_2_img.resize((int(1000*(3*self.hauteur/10)/740),int((3*self.hauteur/10))))
 		pp_2_img = ImageTk.PhotoImage(pp_2_img)
 		boutton_pp_2 = tk.Button(frame_pp, image=pp_2_img, command=lambda:[self.pp_choix_selection(2)])
 		boutton_pp_2.grid(column=1, row=0, sticky="NESW")
 		
 		pp_3_img = Image.open("data/image/pp_1.jpg")
-		pp_3_img = pp_3_img.resize((200,200))
+		pp_3_img = pp_3_img.resize((int(1000*(3*self.hauteur/10)/740),int((3*self.hauteur/10))))
 		pp_3_img = ImageTk.PhotoImage(pp_3_img)
 		boutton_pp_3 = tk.Button(frame_pp, image=pp_3_img, command=lambda:[self.pp_choix_selection(3)])
 		boutton_pp_3.grid(column=2, row=0, sticky="NESW")
 		
 		pp_4_img = Image.open("data/image/pp_a.jpg")
-		pp_4_img = pp_4_img.resize((200,200))
+		pp_4_img = pp_4_img.resize((int(1000*(3*self.hauteur/10)/740),int((3*self.hauteur/10))))
 		pp_4_img = ImageTk.PhotoImage(pp_4_img)
 		boutton_pp_4 = tk.Button(frame_pp, image=pp_4_img, command=lambda:[self.pp_choix_selection(0)])
 		boutton_pp_4.grid(column=3, row=0, sticky="NESW")
@@ -262,17 +246,45 @@ class Game():
 		frame_lancer.columnconfigure(0, weight=1, uniform="row")
 		frame_lancer.rowconfigure(0, weight=1, uniform="row")
 
-		tk.Button(frame_lancer, text="lancer", command=lambda:[client.connect("{'name':'sacha'}", "localhost")]).grid(row=0, column=0, sticky="NESW")
-		print("gros pdf")
+		tk.Button(frame_lancer, text="lancer", command=lambda:[client.connect("{'name':'sacha'}", ip_entree.get( ))]).grid(row=0, column=0, sticky="NESW")
+
+
+		#MENU
+		menu_bare = tk.Menu(self.fenetre)
+		#
+		menu_view = tk.Menu(menu_bare)
+		menu_view.add_checkbutton(label="Fullscreen", command=self.fullscreen)
+		#
+		self.menu_size_nat = tk .BooleanVar()
+		self.menu_size_nat.set(False)
+		self.menu_size_size = tk.IntVar()
+		self.menu_size_size.set(self.largeur)
+
+		menu_size = tk.Menu(menu_view)
+		menu_size.add_checkbutton(label="848x480", onvalue=848, offvalue=not 848, variable=self.largeur, command=lambda:[self.change_resolution("848",  "480")])
+		menu_size.add_checkbutton(label="1000x562", onvalue=1000, offvalue=not 1000, variable=self.largeur, command=lambda:[self.change_resolution("1000",  "562")])
+		menu_size.add_checkbutton(label="1280x720", onvalue=1280, offvalue=not 1280, variable=self.largeur, command=lambda:[self.change_resolution("1280",  "720")])
+		menu_size.add_checkbutton(label="1920x1080", onvalue=1920, offvalue=not 1080, variable=self.largeur, command=lambda:[self.change_resolution("1920",  "1080")])
+		menu_size.add_checkbutton(label="Native ("+str(self.fenetre.winfo_screenwidth())+"x"+str(self.fenetre.winfo_screenheight())+")", onvalue=True, offvalue=False, variable=self.menu_size_nat, command=lambda:[self.change_resolution(str(self.fenetre.winfo_screenwidth()), str(self.fenetre.winfo_screenheight()), nat=True)])
+		menu_view.add_cascade(menu=menu_size, label="Resolution")
+
+		menu_bare.add_cascade(menu=menu_view, label="MAIN")
+		self.fenetre.config(menu=menu_bare)
+		self.fullscreen_state = False
+
+		self.fenetre.bind("<KeyPress>", self.actualize)
 
 
 	def pp_choix_selection(self, nb):
 		self.pp_choix = nb
 
 	def setup_game(self):
-		global game
-		game = self
-		#martin: inserstion graphique pc tout#
+		#clear
+		for widgets in self.pregame_frame.winfo_children():
+			widgets.destroy()
+		self.pregame_frame.destroy()
+		self.fenetre.update()
+		#
 		img = Image.open("data/image/nsi_computer.PNG")
 		img = img.resize((self.largeur,self.hauteur))
 		img = ImageTk.PhotoImage(img)
@@ -302,6 +314,8 @@ class Game():
 		self.frame_score.pack()
 		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
 		self.change_resolution(self.largeur, self.hauteur)
+
+
 
 
 
