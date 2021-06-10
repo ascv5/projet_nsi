@@ -7,9 +7,9 @@ import time
 import ast
 import cv2
 import winsound
+import random
 
 import tools
-
 
 
 
@@ -27,7 +27,7 @@ class Client():
 		self.send("add_player"+"§"+str(info))
 		_thread.start_new_thread(self.listen, ())
 		_thread.start_new_thread(self.commande_cmd, ())
-
+		game.setup_game()
 
 	def listen(self):
 		while True:
@@ -43,7 +43,6 @@ class Client():
 					self.printe("lancement", inpute=True)
 					game.lancer()
 				elif a[0] == "CONNECTED":
-					game.setup_game()
 					self.printe("connected (thread : " + a[1] + " )", inpute=True)
 					self.ide = a[1]
 				elif a[0] == "deco":
@@ -63,6 +62,10 @@ class Client():
 					elif a[1] == "ep2":
 						game.ep2_Nround(a[2],a[3])
 				elif a[0] == "new_player":
+					while game.is_ready_to_go == False:
+						pass
+					print("woush")
+					print(game.is_ready_to_go)
 					game.add_player(a[1])
 				else:
 					self.printe("Unknow command : " + str(a), error=True)
@@ -103,6 +106,7 @@ class Game():
 
 		self.score = 0
 		self.ide = None
+		self.is_ready_to_go = False
 		"""
 		///
 		///
@@ -119,8 +123,8 @@ class Game():
 
 
 
-		self.intro()
-		#self.setup_pregame()
+		#self.intro()
+		self.setup_pregame()
 		print("test")
 		#
 		#
@@ -191,7 +195,7 @@ class Game():
 		
 		#||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 		#PP
-		self.pp_choix = 0
+		self.pp_choix = random.randint(1, 3)
 		
 		frame_pp.columnconfigure(0, weight=1, uniform="row")
 		frame_pp.columnconfigure(1, weight=1, uniform="row")
@@ -207,13 +211,13 @@ class Game():
 		boutton_pp_1 = tk.Button(frame_pp, image=pp_1_img, command=lambda:[self.pp_choix_selection(1)])
 		boutton_pp_1.grid(column=0, row=0, sticky="NESW")
 
-		pp_2_img = Image.open("data/image/pp_1.jpg")
+		pp_2_img = Image.open("data/image/pp_2.jpg")
 		pp_2_img = pp_2_img.resize((int(1000*(3*self.hauteur/10)/740),int((3*self.hauteur/10))))
 		pp_2_img = ImageTk.PhotoImage(pp_2_img)
 		boutton_pp_2 = tk.Button(frame_pp, image=pp_2_img, command=lambda:[self.pp_choix_selection(2)])
 		boutton_pp_2.grid(column=1, row=0, sticky="NESW")
 		
-		pp_3_img = Image.open("data/image/pp_1.jpg")
+		pp_3_img = Image.open("data/image/pp_3.jpg")
 		pp_3_img = pp_3_img.resize((int(1000*(3*self.hauteur/10)/740),int((3*self.hauteur/10))))
 		pp_3_img = ImageTk.PhotoImage(pp_3_img)
 		boutton_pp_3 = tk.Button(frame_pp, image=pp_3_img, command=lambda:[self.pp_choix_selection(3)])
@@ -246,7 +250,7 @@ class Game():
 		frame_lancer.columnconfigure(0, weight=1, uniform="row")
 		frame_lancer.rowconfigure(0, weight=1, uniform="row")
 
-		tk.Button(frame_lancer, text="lancer", command=lambda:[client.connect("{'name':'sacha'}", ip_entree.get( ))]).grid(row=0, column=0, sticky="NESW")
+		tk.Button(frame_lancer, text="lancer", command=lambda:[client.connect("{'name': '"+str(nom_entree.get())+"', 'pp': '"+str(self.pp_choix)+"'}", ip_entree.get())]).grid(row=0, column=0, sticky="NESW")
 
 
 		#MENU
@@ -277,6 +281,7 @@ class Game():
 
 	def pp_choix_selection(self, nb):
 		self.pp_choix = nb
+
 
 	def setup_game(self):
 		#clear
@@ -314,6 +319,7 @@ class Game():
 		self.frame_score.pack()
 		self.window_score = self.canvas.create_window(810.5,264,window=self.frame_score, anchor=tk.NW)
 		self.change_resolution(self.largeur, self.hauteur)
+		self.is_ready_to_go = True
 
 
 
@@ -322,10 +328,22 @@ class Game():
 
 
 	def add_player(self, info):
+		global player_frame_image
+		#
+		#
 		info = ast.literal_eval(info)
 		ide = int(info["ide"])
+		#
+		print(int(self.frame_joueurs_liste[self.player_frame_count]["frame"].winfo_screenwidth()))
+		player_frame_image = Image.open("data/image/pp_"+str(info["pp"])+".jpg")
+		player_frame_image = player_frame_image.resize((int(self.frame_joueurs_liste[self.player_frame_count]["frame"].winfo_width()), int(self.frame_joueurs_liste[self.player_frame_count]["frame"].winfo_height())))
+		player_frame_image = ImageTk.PhotoImage(player_frame_image)
+		#
+
 		self.other_player[ide] = info
 		self.other_player[ide]["frame_nb"] = self.player_frame_count
+		self.frame_joueurs_liste[self.player_frame_count]["image"].config(image=player_frame_image)
+		self.frame_joueurs_liste[self.player_frame_count]["image"].pack()
 		self.frame_joueurs_liste[self.player_frame_count]["nom"].config(text=info["name"])
 		self.frame_joueurs_liste[self.player_frame_count]["nom"].pack()
 		self.frame_joueurs_liste[self.player_frame_count]["score"].config(text=info["score"])
@@ -365,12 +383,16 @@ class Game():
 			self.frame_joueurs_liste.append({})
 			self.frame_joueurs_liste[a]["frame"] = tk.LabelFrame(self.frame_joueurs)
 			self.frame_joueurs_liste[a]["frame"].grid(row=a//2, column=a%2, sticky="NESW")
+			self.frame_joueurs_liste[a]["image"] = tk.Label(self.frame_joueurs_liste[a]["frame"])
+			self.frame_joueurs_liste[a]["image"].pack(fill="both")
+			self.frame_joueurs_liste[a]["image"].pack_forget()
 			self.frame_joueurs_liste[a]["nom"] = tk.Label(self.frame_joueurs_liste[a]["frame"])
 			self.frame_joueurs_liste[a]["nom"].pack()
 			self.frame_joueurs_liste[a]["nom"].pack_forget()
 			self.frame_joueurs_liste[a]["score"] = tk.Label(self.frame_joueurs_liste[a]["frame"])
 			self.frame_joueurs_liste[a]["score"].pack()
 			self.frame_joueurs_liste[a]["score"].pack_forget()
+			print(self.frame_joueurs_liste[a]["frame"].winfo_screenwidth())
 		#Penser a gerer les cas de + ou - de joueur
 
 
@@ -509,7 +531,7 @@ class Game():
 		elif a[0] == "connect":
 			client.connect(str(" ".join(msg.split(" ")[1:-1])), a[-1])
 		elif a[0] == "co":
-			client.connect("{'name':'sacha'}", "localhost")
+			client.connect("{'name':'sacha', 'pp': "+str(self.pp_choix)+"}", "localhost")
 		elif a[0] == "con":
 			client.connect("{'name':'test'}", "localhost")
 		else:
